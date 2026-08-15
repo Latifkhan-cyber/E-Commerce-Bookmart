@@ -1,0 +1,27 @@
+{
+  "name": "bookmart-monorepo",
+  "version": "1.0.0",
+  "description": "BookMart Full-Stack Online Bookstore",
+  "main": "backend/server.js",
+  "scripts": {
+    "backend": "npm --prefix backend start",
+    "backend:dev": "npm --prefix backend run dev",
+    "frontend": "npm --prefix frontend run dev",
+    "dev": "concurrently \"npm run backend:dev\" \"npm run frontend\"",
+    "seed": "npm --prefix backend run seed",
+    "install:all": "npm install && npm --prefix backend install && npm --prefix frontend install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": [
+    "bookstore",
+    "ecommerce",
+    "express",
+    "react",
+    "mongodb",
+    "redux-toolkit"
+  ],
+  "author": "BookMart Team",
+  "license": "MIT"
+}
