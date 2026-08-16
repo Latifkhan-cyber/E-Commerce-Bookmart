@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Edit Book - BookMart Admin</title>
+  <title>Edit Product Details - BookMart Admin</title>
   
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/responsive.css">
@@ -21,19 +21,35 @@
         <li><a href="/admin/authors.html" class="admin-menu-item">✍️ Authors</a></li>
         <li><a href="/admin/publishers.html" class="admin-menu-item">🏢 Publishers</a></li>
         <li><a href="/admin/orders.html" class="admin-menu-item">📦 Customer Orders</a></li>
+        <li><a href="/admin/customers.html" class="admin-menu-item">👥 Customer Accounts</a></li>
+        <li><a href="/admin/inventory.html" class="admin-menu-item">⚠️ Stock Inventory</a></li>
+        <li><a href="/admin/coupons.html" class="admin-menu-item">🏷️ Promo Coupons</a></li>
       </ul>
     </aside>
 
     <main class="admin-main">
       <div class="admin-top-bar">
         <div>
-          <h1 style="font-size:1.8rem;margin-bottom:0.25rem;">Edit Book Record</h1>
-          <p style="color:var(--text-muted);">Modify pricing, stock, description, or details.</p>
+          <h1 style="font-size:1.8rem;margin-bottom:0.25rem;">Edit Book Product Details</h1>
+          <p style="color:var(--text-muted);">Modify metadata, stock levels, pricing, category, and cover art.</p>
         </div>
-        <a href="/admin/books.html" class="btn btn-outline">← Back to Books</a>
+        <div style="display:flex;gap:0.75rem;">
+          <a id="view-product-link" href="#" target="_blank" class="btn btn-outline">👁️ Preview on Site</a>
+          <a href="/admin/books.html" class="btn btn-outline">← Back to Catalog</a>
+        </div>
       </div>
 
-      <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:2.5rem;max-width:800px;">
+      <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:2.5rem;max-width:850px;">
+        
+        <!-- Cover Preview Header -->
+        <div style="display:flex;gap:1.5rem;align-items:center;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border-light);">
+          <img id="edit-cover-preview" src="https://images.unsplash.com/photo-1532012197267-da84d127e765?w=500&q=80" alt="Cover Preview" style="width:72px;height:96px;object-fit:cover;border-radius:var(--radius-md);border:1px solid var(--card-border);">
+          <div>
+            <h3 id="edit-header-title" style="margin-bottom:0.25rem;">Loading Book Details...</h3>
+            <div id="edit-header-meta" style="font-size:0.85rem;color:var(--text-muted);">Fetching details from database...</div>
+          </div>
+        </div>
+
         <form id="edit-book-form">
           <div class="form-group">
             <label for="edit-title" class="form-label">Book Title *</label>
@@ -41,8 +57,52 @@
           </div>
 
           <div class="form-group">
-            <label for="edit-description" class="form-label">Description *</label>
+            <label for="edit-description" class="form-label">Synopsis / Description *</label>
             <textarea id="edit-description" class="form-textarea" rows="4" required></textarea>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div class="form-group">
+              <label for="edit-author" class="form-label">Author *</label>
+              <select id="edit-author" class="form-select" required>
+                <option value="auth-martin|Robert C. Martin">Robert C. Martin</option>
+                <option value="auth-fowler|Martin Fowler">Martin Fowler</option>
+                <option value="auth-cormen|Thomas H. Cormen">Thomas H. Cormen</option>
+                <option value="auth-clear|James Clear">James Clear</option>
+                <option value="auth-orwell|George Orwell">George Orwell</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="edit-category" class="form-label">Category *</label>
+              <select id="edit-category" class="form-select" required>
+                <option value="cat-prog|Programming">Programming</option>
+                <option value="cat-cs|Computer Science">Computer Science</option>
+                <option value="cat-bus|Business">Business</option>
+                <option value="cat-fic|Fiction">Fiction</option>
+                <option value="cat-med|Medical">Medical</option>
+                <option value="cat-math|Mathematics">Mathematics</option>
+                <option value="cat-sci|Science">Science</option>
+                <option value="cat-hist|History">History</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div class="form-group">
+              <label for="edit-publisher" class="form-label">Publisher *</label>
+              <select id="edit-publisher" class="form-select" required>
+                <option value="pub-prentice|Prentice Hall">Prentice Hall</option>
+                <option value="pub-oreilly|O'Reilly Media">O'Reilly Media</option>
+                <option value="pub-mit|MIT Press">MIT Press</option>
+                <option value="pub-penguin|Penguin Random House">Penguin Random House</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="edit-isbn" class="form-label">ISBN-13 Code *</label>
+              <input type="text" id="edit-isbn" class="form-input" required>
+            </div>
           </div>
 
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;">
@@ -62,8 +122,30 @@
             </div>
           </div>
 
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;">
+            <div class="form-group">
+              <label for="edit-pages" class="form-label">Page Count</label>
+              <input type="number" id="edit-pages" class="form-input">
+            </div>
+
+            <div class="form-group">
+              <label for="edit-lang" class="form-label">Language</label>
+              <input type="text" id="edit-lang" class="form-input">
+            </div>
+
+            <div class="form-group">
+              <label for="edit-year" class="form-label">Publication Year</label>
+              <input type="number" id="edit-year" class="form-input">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-cover-file" class="form-label">Change Cover Image (Firebase Storage Upload)</label>
+            <input type="file" id="edit-cover-file" accept="image/*" class="form-input">
+          </div>
+
           <button type="submit" id="update-book-btn" class="btn btn-lg btn-primary" style="width:100%;margin-top:1rem;">
-            Update Book Details
+            Save Product Changes
           </button>
         </form>
       </div>
@@ -75,41 +157,88 @@
   <script type="module" src="/js/admin/admin-auth.js"></script>
 
   <script type="module">
-    import { fetchAdminBooks, saveAdminBook } from "/js/admin/books.js";
+    import { fetchAdminBookById, saveAdminBook } from "/js/admin/books.js";
 
     const urlParams = new URLSearchParams(window.location.search);
-    const bookId = urlParams.get("id");
+    const bookId = urlParams.get("id") || "book-001";
 
-    fetchAdminBooks().then(books => {
-      const book = books.find(b => b.id === bookId);
+    // Set Preview Link
+    const previewLink = document.getElementById("view-product-link");
+    if (previewLink) previewLink.href = `/book-details.html?id=${bookId}`;
+
+    fetchAdminBookById(bookId).then(book => {
       if (book) {
+        document.getElementById("edit-header-title").textContent = book.title;
+        document.getElementById("edit-header-meta").textContent = `ID: ${book.id} • ${book.authorName} • ${book.categoryName}`;
+        document.getElementById("edit-cover-preview").src = book.coverImage;
+
         document.getElementById("edit-title").value = book.title || "";
         document.getElementById("edit-description").value = book.description || "";
+        
+        // Populate Dropdowns
+        const authorSelect = document.getElementById("edit-author");
+        if (authorSelect) {
+          const match = Array.from(authorSelect.options).find(opt => opt.value.startsWith(book.authorId));
+          if (match) authorSelect.value = match.value;
+        }
+
+        const categorySelect = document.getElementById("edit-category");
+        if (categorySelect) {
+          const match = Array.from(categorySelect.options).find(opt => opt.value.startsWith(book.categoryId));
+          if (match) categorySelect.value = match.value;
+        }
+
+        const publisherSelect = document.getElementById("edit-publisher");
+        if (publisherSelect) {
+          const match = Array.from(publisherSelect.options).find(opt => opt.value.startsWith(book.publisherId));
+          if (match) publisherSelect.value = match.value;
+        }
+
+        document.getElementById("edit-isbn").value = book.isbn || "";
         document.getElementById("edit-price").value = book.price || "";
         document.getElementById("edit-discount-price").value = book.discountPrice || "";
         document.getElementById("edit-stock").value = book.stock || 0;
+        document.getElementById("edit-pages").value = book.pages || 300;
+        document.getElementById("edit-lang").value = book.language || "English";
+        document.getElementById("edit-year").value = book.publicationYear || 2023;
 
+        // Form Submit Handler
         document.getElementById("edit-book-form")?.addEventListener("submit", async (e) => {
           e.preventDefault();
+
+          const [authorId, authorName] = document.getElementById("edit-author").value.split("|");
+          const [categoryId, categoryName] = document.getElementById("edit-category").value.split("|");
+          const [publisherId, publisherName] = document.getElementById("edit-publisher").value.split("|");
+
+          const coverFileInput = document.getElementById("edit-cover-file");
+          const coverFile = coverFileInput?.files[0] || null;
+
           const formData = {
             title: document.getElementById("edit-title").value,
             description: document.getElementById("edit-description").value,
-            authorId: book.authorId,
-            authorName: book.authorName,
-            categoryId: book.categoryId,
-            categoryName: book.categoryName,
-            publisherId: book.publisherId,
-            publisherName: book.publisherName,
-            isbn: book.isbn,
+            authorId, authorName,
+            categoryId, categoryName,
+            publisherId, publisherName,
+            isbn: document.getElementById("edit-isbn").value,
             price: document.getElementById("edit-price").value,
             discountPrice: document.getElementById("edit-discount-price").value,
             stock: document.getElementById("edit-stock").value,
+            pages: document.getElementById("edit-pages").value,
+            language: document.getElementById("edit-lang").value,
+            publicationYear: document.getElementById("edit-year").value,
             coverImage: book.coverImage
           };
 
-          const success = await saveAdminBook(formData, null, bookId);
+          const btn = document.getElementById("update-book-btn");
+          btn.disabled = true;
+          btn.textContent = "Saving Changes...";
+
+          const success = await saveAdminBook(formData, coverFile, bookId);
           if (success) {
             setTimeout(() => { window.location.href = "/admin/books.html"; }, 800);
+          } else {
+            btn.disabled = false;
+            btn.textContent = "Save Product Changes";
           }
         });
       }
