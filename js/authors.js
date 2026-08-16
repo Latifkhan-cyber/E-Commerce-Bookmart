@@ -6,6 +6,7 @@ import { collection, getDocs, doc, getDoc } from "https://www.gstatic.com/fireba
 import { db } from "./firebase-config.js";
 import { sampleAuthors, sampleBooks } from "./seed-data.js";
 import { renderStarRating, formatCurrency } from "./utils.js";
+import { createBookCardHtml } from "./books.js";
 
 let authorsCache = sampleAuthors;
 let isAuthorsFetched = false;
@@ -133,32 +134,5 @@ export async function renderAuthorDetailPage(authorId) {
     return;
   }
 
-  booksContainer.innerHTML = authorBooks.map(book => `
-    <div class="book-card">
-      <div class="book-cover-wrap">
-        <img src="${book.coverImage}" alt="${book.title}" loading="lazy">
-        <a href="/book-details.html?id=${book.id}" style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:1;"></a>
-      </div>
-      <div class="book-details-wrap">
-        <div class="book-category-tag">${book.categoryName}</div>
-        <h3 class="book-title">
-          <a href="/book-details.html?id=${book.id}">${book.title}</a>
-        </h3>
-        <div class="book-author">by ${book.authorName}</div>
-        <div class="book-rating">
-          ${renderStarRating(book.rating || 5)}
-          <span>(${book.reviewCount || 0})</span>
-        </div>
-        <div class="book-price-row">
-          <div class="price-box">
-            <span class="current-price">${formatCurrency(book.discountPrice || book.price)}</span>
-            ${book.discountPrice ? `<span class="original-price">${formatCurrency(book.price)}</span>` : ''}
-          </div>
-          <button class="btn btn-sm btn-primary add-to-cart-btn" data-book-id="${book.id}" style="z-index:5;">
-            🛒 Add
-          </button>
-        </div>
-      </div>
-    </div>
-  `).join('');
+  booksContainer.innerHTML = authorBooks.map(book => createBookCardHtml(book)).join('');
 }

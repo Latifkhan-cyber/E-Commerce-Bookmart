@@ -50,11 +50,11 @@ export function showToast(message, type = 'info', duration = 3500) {
  * @returns {string}
  */
 export function formatCurrency(amount) {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2
-  }).format(amount || 0);
+  const formatted = Number(amount || 0).toLocaleString('en-PK', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+  return `Rs. ${formatted}`;
 }
 
 /**

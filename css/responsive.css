@@ -295,36 +295,80 @@
     margin-top: 2rem !important;
   }
 
-  /* 2-Column Mobile Book Cards Grid */
+  /* 2-Column Mobile Book Cards Grid & Compact Cards */
+  section[style*="padding: 2.5rem"],
+  section[style*="padding:2.5rem"] {
+    padding: 1.25rem 0.85rem !important;
+  }
+
   .books-grid {
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 0.85rem !important;
+    gap: 0.75rem !important;
   }
 
   .book-card {
-    padding: 0.75rem;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .book-details-wrap {
+    padding: 0.75rem !important;
   }
 
   .book-cover-wrap {
-    height: 180px;
+    height: 165px !important;
   }
 
   .book-title {
-    font-size: 0.88rem;
-    height: 2.6em;
-    overflow: hidden;
+    font-size: 0.85rem !important;
+    line-height: 1.25 !important;
+    height: 2.5em !important;
+    margin-bottom: 0.25rem !important;
   }
 
   .book-author {
-    font-size: 0.78rem;
+    font-size: 0.75rem !important;
+    margin-bottom: 0.35rem !important;
+  }
+
+  .book-rating {
+    font-size: 0.75rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .book-price-row {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 0.35rem !important;
+    padding-top: 0.5rem !important;
+    width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  .price-box {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0 !important;
+    line-height: 1.1 !important;
+    min-width: 0 !important;
   }
 
   .current-price {
-    font-size: 1.05rem;
+    font-size: 0.95rem !important;
   }
 
   .original-price {
-    font-size: 0.8rem;
+    font-size: 0.72rem !important;
+    margin-left: 0 !important;
+  }
+
+  .add-to-cart-btn {
+    padding: 0.35rem 0.55rem !important;
+    font-size: 0.78rem !important;
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
   }
 
   .btn-sm {
@@ -376,5 +420,18 @@
   .toast {
     width: 100%;
     min-width: unset;
+  }
+}
+
+/* ==========================================================================
+   4. ULTRA-NARROW MOBILE PHONES (Screens 380px and under)
+   ========================================================================== */
+@media (max-width: 380px) {
+  .add-to-cart-btn .btn-cart-text {
+    display: none !important;
+  }
+
+  .add-to-cart-btn {
+    padding: 0.35rem 0.45rem !important;
   }
 }

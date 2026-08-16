@@ -102,12 +102,15 @@
   background-color: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: var(--radius-lg);
-  overflow: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
   box-shadow: var(--shadow-sm);
 }
 
 .data-table {
   width: 100%;
+  min-width: 600px;
   border-collapse: collapse;
   text-align: left;
 }

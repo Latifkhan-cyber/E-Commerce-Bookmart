@@ -110,7 +110,7 @@ export function createBookCardHtml(book) {
             ${book.discountPrice ? `<span class="original-price">${formatCurrency(book.price)}</span>` : ''}
           </div>
           <button class="btn btn-sm btn-primary add-to-cart-btn" data-book-id="${book.id}" style="z-index:5;">
-            🛒 Add
+            <span class="btn-cart-icon">🛒</span> <span class="btn-cart-text">Add</span>
           </button>
         </div>
       </div>

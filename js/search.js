@@ -3,7 +3,7 @@
 // ==========================================================================
 
 import { fetchAllBooks, createBookCardHtml } from "./books.js";
-import { debounce } from "./utils.js";
+import { debounce, formatCurrency } from "./utils.js";
 
 export class BookSearchEngine {
   constructor(gridContainerId, paginationContainerId, resultsCountId) {
@@ -82,7 +82,7 @@ export class BookSearchEngine {
     if (priceRange) {
       priceRange.addEventListener("input", (e) => {
         this.filters.maxPrice = parseFloat(e.target.value);
-        if (priceDisplay) priceDisplay.textContent = `$${this.filters.maxPrice}`;
+        if (priceDisplay) priceDisplay.textContent = formatCurrency(this.filters.maxPrice);
         this.currentPage = 1;
         this.applyFilters();
       });
@@ -134,7 +134,7 @@ export class BookSearchEngine {
     if (priceRange) priceRange.value = 150;
 
     const priceDisplay = document.getElementById("filter-price-display");
-    if (priceDisplay) priceDisplay.textContent = "$150";
+    if (priceDisplay) priceDisplay.textContent = formatCurrency(150);
 
     const sortSelect = document.getElementById("filter-sort");
     if (sortSelect) sortSelect.value = "newest";

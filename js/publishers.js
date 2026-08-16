@@ -6,6 +6,7 @@ import { collection, getDocs, doc, getDoc, query, where } from "https://www.gsta
 import { db } from "./firebase-config.js";
 import { samplePublishers, sampleBooks } from "./seed-data.js";
 import { renderStarRating, formatCurrency } from "./utils.js";
+import { createBookCardHtml } from "./books.js";
 
 /**
  * Fetch all publishers from Firestore (with fallback)
@@ -152,30 +153,5 @@ export async function renderPublisherDetailPage(publisherId) {
     return;
   }
 
-  booksContainer.innerHTML = publisherBooks.map(book => `
-    <div class="book-card">
-      <div class="book-cover-wrap">
-        <img src="${book.coverImage}" alt="${book.title}" loading="lazy">
-        <a href="/book-details.html?id=${book.id}" style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:1;"></a>
-      </div>
-      <div class="book-details-wrap">
-        <div class="book-category-tag">${book.categoryName}</div>
-        <h3 class="book-title">
-          <a href="/book-details.html?id=${book.id}">${book.title}</a>
-        </h3>
-        <div class="book-author">by ${book.authorName}</div>
-        <div class="book-rating">
-          ${renderStarRating(book.rating || 5)}
-          <span>(${book.reviewCount || 0})</span>
-        </div>
-        <div class="book-price-row">
-          <div class="price-box">
-            <span class="current-price">${formatCurrency(book.discountPrice || book.price)}</span>
-            ${book.discountPrice ? `<span class="original-price">${formatCurrency(book.price)}</span>` : ''}
-          </div>
-          <a href="/book-details.html?id=${book.id}" class="btn btn-sm btn-primary" style="z-index:2;">View</a>
-        </div>
-      </div>
-    </div>
-  `).join('');
+  booksContainer.innerHTML = publisherBooks.map(book => createBookCardHtml(book)).join('');
 }
