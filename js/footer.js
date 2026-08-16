@@ -71,13 +71,9 @@ export function renderFooter() {
           </div>
         </div>
 
-        <!-- Footer Bottom -->
-        <div class="footer-bottom">
-          <div>© ${new Date().getFullYear()} BookMart Inc. All rights reserved. Built with Vanilla JS & Firebase.</div>
-          <div style="display:flex;gap:1rem;">
-            <span>Secure Cash on Delivery</span>
-            <span>256-bit SSL Encryption</span>
-          </div>
+        <!-- Developer Attribution -->
+        <div style="border-top:1px solid #1E293B;padding-top:1.5rem;margin-top:2.5rem;text-align:center;font-size:0.95rem;color:#94A3B8;">
+          Built with ❤️ by <strong style="color:var(--secondary-color);font-weight:700;">Latif Khan</strong> — Full Stack Web Developer
         </div>
       </div>
     </footer>
@@ -94,7 +90,6 @@ export function renderFooter() {
       if (!email) return;
 
       try {
-        // Check duplicate email
         const q = query(collection(db, "newsletterSubscriptions"), where("email", "==", email));
         const snap = await getDocs(q);
 
