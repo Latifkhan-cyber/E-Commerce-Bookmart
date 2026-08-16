@@ -1,16 +1,20 @@
 /* ==========================================================================
-   BookMart - Responsive Rules & Media Queries (css/responsive.css)
+   BookMart - Responsive Master Stylesheet (css/responsive.css)
    ========================================================================== */
 
-/* Laptop & Large Desktop (1024px and up) */
+/* Large Laptops & Desktops (Under 1200px) */
 @media (max-width: 1200px) {
   .footer-grid {
     grid-template-columns: 1.5fr repeat(3, 1fr);
     gap: 2rem;
   }
+
+  .admin-layout {
+    grid-template-columns: 220px 1fr;
+  }
 }
 
-/* Tablet & Mobile Header Transition (Under 1024px) */
+/* Tablets & Mobile Navigation Trigger (Under 1024px) */
 @media (max-width: 1024px) {
   .nav-menu {
     position: fixed;
@@ -25,6 +29,7 @@
     box-shadow: var(--shadow-lg);
     transition: var(--transition);
     border-right: 1px solid var(--card-border);
+    z-index: 1000;
   }
 
   .nav-menu.active {
@@ -39,6 +44,7 @@
     background: none;
     border: none;
     padding: 5px;
+    margin-left: 0.5rem;
   }
 
   .hamburger span {
@@ -48,49 +54,236 @@
     border-radius: 2px;
     transition: var(--transition);
   }
+
+  /* Admin Layout Collapsed Sidebar */
+  .admin-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-sidebar {
+    position: relative;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--card-border);
+    padding: 1rem 1.5rem;
+  }
+
+  .admin-menu-list {
+    display: flex;
+    overflow-x: auto;
+    gap: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .admin-menu-item {
+    white-space: nowrap;
+  }
 }
 
-/* Tablet (Under 768px) */
+/* Tablet Screens (Under 768px) */
 @media (max-width: 768px) {
-  h1 { font-size: 1.85rem; }
-  h2 { font-size: 1.45rem; }
-  h3 { font-size: 1.2rem; }
+  h1 { font-size: 1.75rem !important; }
+  h2 { font-size: 1.4rem !important; }
+  h3 { font-size: 1.15rem !important; }
 
+  .hero-section {
+    grid-template-columns: 1fr !important;
+    text-align: center;
+    padding: 2.5rem 1.25rem !important;
+  }
+
+  .hero-content p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-content div {
+    justify-content: center;
+  }
+
+  .hero-image {
+    margin-top: 1.5rem;
+    justify-content: center !important;
+  }
+
+  /* Footer Layout for Tablets */
   .footer-grid {
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
   }
 
-  .footer-bottom {
-    flex-direction: column;
-    gap: 1rem;
-    text-align: center;
+  /* Shop Filters Sidebar & Catalog Layout */
+  .shop-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .filter-sidebar {
+    position: static;
+    margin-bottom: 2rem;
+  }
+
+  /* Book Details Page */
+  .book-details-layout {
+    grid-template-columns: 1fr !important;
+    gap: 2rem;
+  }
+
+  .book-gallery .main-image {
+    height: 320px;
+  }
+
+  /* Cart & Checkout Layout */
+  .checkout-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .cart-table-wrap, .data-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    display: block;
+    margin-bottom: 1.5rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr !important;
   }
 }
 
-/* Mobile Screens (320px - 425px) */
-@media (max-width: 480px) {
+/* Mobile Screens (320px - 576px) */
+@media (max-width: 576px) {
   .container {
-    padding: 0 0.85rem;
+    padding: 0 1rem;
+  }
+
+  /* Brand Header Logo */
+  .nav-brand {
+    font-size: 1.35rem;
+  }
+
+  .nav-actions {
+    gap: 0.5rem;
+  }
+
+  /* Footer Mobile Stacking */
+  .footer {
+    padding: 3rem 0 2rem;
   }
 
   .footer-grid {
-    grid-template-columns: 1fr;
-    gap: 1.75rem;
+    grid-template-columns: 1fr !important;
+    gap: 2rem;
+  }
+
+  .footer-col {
+    text-align: left;
+  }
+
+  #newsletter-form {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  #newsletter-form input {
+    width: 100%;
+  }
+
+  #newsletter-form button {
+    width: 100%;
+  }
+
+  /* Developer Attribution */
+  .footer div[style*="border-top"] {
+    font-size: 0.85rem !important;
+    line-height: 1.6;
+    padding-top: 1.25rem !important;
+    margin-top: 2rem !important;
+  }
+
+  /* Book Grid 2 Columns on Mobile */
+  .books-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.85rem !important;
+  }
+
+  .book-card {
+    padding: 0.75rem;
+  }
+
+  .book-cover-wrap {
+    height: 190px;
+  }
+
+  .book-title {
+    font-size: 0.9rem;
+    height: 2.6em;
+    overflow: hidden;
+  }
+
+  .book-author {
+    font-size: 0.78rem;
+  }
+
+  .current-price {
+    font-size: 1.05rem;
+  }
+
+  .original-price {
+    font-size: 0.8rem;
+  }
+
+  .btn-sm {
+    padding: 0.35rem 0.65rem;
+    font-size: 0.8rem;
   }
 
   .btn-lg {
     width: 100%;
+    padding: 0.75rem 1rem;
   }
 
+  /* Categories & Authors Mobile Grids */
+  .categories-grid, .authors-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.85rem !important;
+  }
+
+  /* Account Dashboard & Tracking Timeline */
+  .tracking-timeline {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+  }
+
+  .timeline-step {
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  .timeline-step::after {
+    display: none;
+  }
+
+  /* Admin Top Bar */
+  .admin-top-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Toast Notification Mobile Positioning */
   #toast-container {
-    left: 1rem;
-    right: 1rem;
-    bottom: 1rem;
+    left: 0.85rem;
+    right: 0.85rem;
+    bottom: 0.85rem;
   }
 
   .toast {
-    min-width: unset;
     width: 100%;
+    min-width: unset;
   }
 }
