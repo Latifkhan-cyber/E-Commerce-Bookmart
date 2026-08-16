@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Special Deals & Discounts - BookMart</title>
+  <meta name="description" content="Save on bestselling technical handbooks, computer science textbooks, and literature with BookMart promotional discounts.">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/shop.css">
+</head>
+<body>
+
+  <main class="main-content">
+    <div class="container">
+      
+      <!-- Deals Banner -->
+      <div class="hero-section" style="background: linear-gradient(135deg, #EF4444 0%, #991B1B 100%); margin-bottom: 3rem;">
+        <div class="hero-content">
+          <span class="badge badge-warning" style="background:#FFF;color:#EF4444;margin-bottom:1rem;">⚡ Limited Time Offers</span>
+          <h1 style="color:#FFF;">Exclusive Book Deals</h1>
+          <p style="color:#FEE2E2;">Enjoy up to 35% discount on top programming guides, algorithms literature, and classic fiction.</p>
+        </div>
+        <div class="hero-image" style="display:flex;justify-content:center;">
+          <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&q=80" alt="Special Deals" style="width:160px;height:220px;object-fit:cover;border-radius:var(--radius-md);">
+        </div>
+      </div>
+
+      <!-- Discounted Books Grid -->
+      <div style="margin-bottom: 2rem;">
+        <h2 style="margin-bottom: 1.5rem;">Discounted Titles</h2>
+        <div class="books-grid" id="deals-books-grid">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script type="module" src="/js/firebase-config.js"></script>
+  <script type="module" src="/js/utils.js"></script>
+  <script type="module" src="/js/navbar.js"></script>
+  <script type="module" src="/js/footer.js"></script>
+
+  <script type="module">
+    import { fetchDealBooks, createBookCardHtml } from "/js/books.js";
+
+    fetchDealBooks(12).then(books => {
+      const container = document.getElementById("deals-books-grid");
+      if (container) {
+        if (books.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state" style="grid-column:1/-1;">
+              <div class="empty-state-icon">🏷️</div>
+              <h3>No Active Deals Right Now</h3>
+              <p>Check back soon for upcoming holiday promotions and publisher sales.</p>
+              <a href="/books.html" class="btn btn-primary">View Full Catalog</a>
+            </div>
+          `;
+          return;
+        }
+        container.innerHTML = books.map(b => createBookCardHtml(b)).join('');
+      }
+    });
+  </script>
+</body>
+</html>

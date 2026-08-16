@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BookMart - Discover Your Next Great Book</title>
+  <meta name="description" content="BookMart is your premier online bookstore for software development, computer science, literature, science, and academic books with fast delivery.">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/shop.css">
+</head>
+<body>
+
+  <main class="main-content">
+    <div class="container">
+      
+      <!-- HERO SECTION -->
+      <section class="hero-section">
+        <div class="hero-content">
+          <span class="badge badge-warning" style="margin-bottom:1rem;">🔥 Summer Reading Sale</span>
+          <h1>Discover Your Next Great Book</h1>
+          <p>
+            Explore over 10,000+ authentic books across programming, computer science, literature, business, medical, and history with worldwide shipping.
+          </p>
+          <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+            <a href="/books.html" class="btn btn-lg btn-accent">📚 Shop Books Now</a>
+            <a href="/deals.html" class="btn btn-lg btn-outline" style="color:#FFF;border-color:rgba(255,255,255,0.3);">⚡ View Special Deals</a>
+          </div>
+        </div>
+        <div class="hero-image" style="display:flex;justify-content:center;">
+          <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?w=500&q=80" alt="BookMart Featured Book" style="width:260px;height:360px;object-fit:cover;">
+        </div>
+      </section>
+
+      <!-- FEATURED CATEGORIES SECTION -->
+      <section style="margin-bottom: 4rem;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1.75rem;">
+          <div>
+            <h2 style="font-size:1.8rem;margin-bottom:0.35rem;">Popular Categories</h2>
+            <p style="color:var(--text-muted);">Explore handpicked book subjects tailored for curious minds.</p>
+          </div>
+          <a href="/categories.html" class="btn btn-sm btn-outline">View All Categories →</a>
+        </div>
+
+        <div class="category-grid" id="home-categories-grid">
+          <!-- Rendered via JS -->
+        </div>
+      </section>
+
+      <!-- FEATURED BOOKS SECTION -->
+      <section style="margin-bottom: 4rem;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1.75rem;">
+          <div>
+            <h2 style="font-size:1.8rem;margin-bottom:0.35rem;">Featured Titles</h2>
+            <p style="color:var(--text-muted);">Hand-selected masterpieces from acclaimed authors and technical experts.</p>
+          </div>
+          <a href="/books.html" class="btn btn-sm btn-outline">Browse All Books →</a>
+        </div>
+
+        <div class="books-grid" id="home-featured-grid">
+          <!-- Rendered via JS -->
+        </div>
+      </section>
+
+      <!-- BEST SELLERS SECTION -->
+      <section style="margin-bottom: 4rem; background: var(--card-bg); padding: 2.5rem; border-radius: var(--radius-lg); border: 1px solid var(--card-border);">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1.75rem;">
+          <div>
+            <span class="badge badge-success" style="margin-bottom:0.5rem;">Top Ranked</span>
+            <h2 style="font-size:1.8rem;margin-bottom:0.35rem;">Best Sellers</h2>
+            <p style="color:var(--text-muted);">Most purchased books by our reading community this month.</p>
+          </div>
+          <a href="/books.html?sort=popular" class="btn btn-sm btn-outline">See Full List →</a>
+        </div>
+
+        <div class="books-grid" id="home-bestsellers-grid">
+          <!-- Rendered via JS -->
+        </div>
+      </section>
+
+      <!-- POPULAR AUTHORS SECTION -->
+      <section style="margin-bottom: 4rem;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:1.75rem;">
+          <div>
+            <h2 style="font-size:1.8rem;margin-bottom:0.35rem;">Popular Authors</h2>
+            <p style="color:var(--text-muted);">Read works from visionary software craftspeople and storytellers.</p>
+          </div>
+          <a href="/authors.html" class="btn btn-sm btn-outline">Explore Authors →</a>
+        </div>
+
+        <div class="category-grid" id="home-authors-grid" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));">
+          <!-- Rendered via JS -->
+        </div>
+      </section>
+
+      <!-- CUSTOMER TESTIMONIALS SECTION -->
+      <section style="margin-bottom: 4rem;">
+        <div style="text-align:center;margin-bottom:2.5rem;">
+          <span class="badge badge-info" style="margin-bottom:0.5rem;">Customer Feedback</span>
+          <h2>What Our Readers Say</h2>
+          <p style="color:var(--text-muted);max-width:500px;margin:0 auto;">Read reviews from verified software engineers, students, and book lovers.</p>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:1.5rem;">
+          <div style="background-color:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:2rem;box-shadow:var(--shadow-sm);">
+            <div style="color:var(--warning-color);margin-bottom:0.75rem;font-size:1.1rem;">★★★★★</div>
+            <p style="color:var(--text-main);font-size:0.95rem;line-height:1.6;margin-bottom:1.25rem;">
+              "BookMart delivered Clean Code in pristine condition within 48 hours. Genuine books and unbeatable pricing!"
+            </p>
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80" alt="Customer" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
+              <div>
+                <div style="font-weight:700;font-size:0.9rem;">Sarah Jenkins</div>
+                <div style="font-size:0.8rem;color:var(--text-muted);">Verified Buyer</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background-color:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:2rem;box-shadow:var(--shadow-sm);">
+            <div style="color:var(--warning-color);margin-bottom:0.75rem;font-size:1.1rem;">★★★★★</div>
+            <p style="color:var(--text-main);font-size:0.95rem;line-height:1.6;margin-bottom:1.25rem;">
+              "Extremely impressed by the computer science catalog. Finding algorithms and system architecture books here was effortless."
+            </p>
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" alt="Customer" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
+              <div>
+                <div style="font-weight:700;font-size:0.9rem;">David Chen</div>
+                <div style="font-size:0.8rem;color:var(--text-muted);">Verified Buyer</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background-color:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:2rem;box-shadow:var(--shadow-sm);">
+            <div style="color:var(--warning-color);margin-bottom:0.75rem;font-size:1.1rem;">★★★★★</div>
+            <p style="color:var(--text-main);font-size:0.95rem;line-height:1.6;margin-bottom:1.25rem;">
+              "Cash on delivery option and fast shipping make BookMart my absolute favorite online bookstore!"
+            </p>
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80" alt="Customer" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
+              <div>
+                <div style="font-weight:700;font-size:0.9rem;">Elena Rostova</div>
+                <div style="font-size:0.8rem;color:var(--text-muted);">Verified Buyer</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script type="module" src="/js/firebase-config.js"></script>
+  <script type="module" src="/js/utils.js"></script>
+  <script type="module" src="/js/navbar.js"></script>
+  <script type="module" src="/js/footer.js"></script>
+
+  <script type="module">
+    import { fetchFeaturedBooks, fetchBestSellers, createBookCardHtml } from "/js/books.js";
+    import { renderCategoryGrid } from "/js/categories.js";
+    import { renderAuthorGrid } from "/js/authors.js";
+
+    // Load Categories
+    renderCategoryGrid("home-categories-grid");
+
+    // Load Featured Books
+    fetchFeaturedBooks(4).then(books => {
+      const container = document.getElementById("home-featured-grid");
+      if (container) {
+        container.innerHTML = books.map(b => createBookCardHtml(b)).join('');
+      }
+    });
+
+    // Load Best Sellers
+    fetchBestSellers(4).then(books => {
+      const container = document.getElementById("home-bestsellers-grid");
+      if (container) {
+        container.innerHTML = books.map(b => createBookCardHtml(b)).join('');
+      }
+    });
+
+    // Load Popular Authors
+    renderAuthorGrid("home-authors-grid");
+  </script>
+</body>
+</html>

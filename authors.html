@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Featured Authors - BookMart</title>
+  <meta name="description" content="Discover popular authors, software architects, and novelists featured on BookMart.">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/shop.css">
+</head>
+<body>
+
+  <main class="main-content">
+    <div class="container">
+      <div style="margin-bottom: 2.5rem;">
+        <span class="badge badge-warning" style="margin-bottom:0.5rem;">Famous Authors</span>
+        <h1 style="margin-bottom: 0.5rem;">Popular Authors</h1>
+        <p style="color: var(--text-muted); max-width: 600px;">
+          Meet the brilliant minds behind our bestselling software engineering handbooks, academic treatises, and literary classics.
+        </p>
+      </div>
+
+      <!-- Authors Grid -->
+      <div class="category-grid" id="authors-grid-container" style="grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));">
+        <!-- Dynamic Author Cards Loaded Here -->
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="/js/firebase-config.js"></script>
+  <script type="module" src="/js/utils.js"></script>
+  <script type="module" src="/js/navbar.js"></script>
+  <script type="module" src="/js/footer.js"></script>
+
+  <script type="module">
+    import { renderAuthorGrid } from "/js/authors.js";
+    renderAuthorGrid("authors-grid-container");
+  </script>
+</body>
+</html>

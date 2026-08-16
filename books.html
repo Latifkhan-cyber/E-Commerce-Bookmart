@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Catalog - BookMart</title>
+  <meta name="description" content="Search and filter thousands of books by title, author, category, publisher, price range, and ratings at BookMart.">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/shop.css">
+</head>
+<body>
+
+  <main class="main-content">
+    <div class="container">
+      
+      <!-- Catalog Header -->
+      <div style="margin-bottom: 2rem;">
+        <span class="badge badge-info" style="margin-bottom:0.5rem;">Explore Catalog</span>
+        <h1>Browse All Books</h1>
+        <p style="color: var(--text-muted);">Use the search bar and filters below to pinpoint specific titles, authors, categories, or price ranges.</p>
+      </div>
+
+      <!-- Shop Layout Grid -->
+      <div class="shop-layout">
+        <!-- Sidebar Filters -->
+        <aside class="shop-sidebar">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border-light);">
+            <h3 style="font-size:1.15rem;">Filter Books</h3>
+            <button id="reset-filters-btn" class="btn btn-sm btn-outline" style="font-size:0.75rem;">Clear All</button>
+          </div>
+
+          <!-- Search Input -->
+          <div class="filter-group">
+            <label for="search-input" class="filter-title">Search Keywords</label>
+            <div style="position:relative;">
+              <input type="text" id="search-input" class="form-input" placeholder="Title, Author, ISBN..." style="padding-left:2.2rem;">
+              <span style="position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);color:var(--text-muted);">🔍</span>
+            </div>
+          </div>
+
+          <!-- Category Filter -->
+          <div class="filter-group">
+            <label for="filter-category" class="filter-title">Category</label>
+            <select id="filter-category" class="form-select">
+              <option value="all">All Categories</option>
+              <option value="cat-prog">Programming</option>
+              <option value="cat-cs">Computer Science</option>
+              <option value="cat-bus">Business</option>
+              <option value="cat-fic">Fiction</option>
+              <option value="cat-med">Medical</option>
+              <option value="cat-math">Mathematics</option>
+              <option value="cat-sci">Science</option>
+              <option value="cat-hist">History</option>
+            </select>
+          </div>
+
+          <!-- Author Filter -->
+          <div class="filter-group">
+            <label for="filter-author" class="filter-title">Author</label>
+            <select id="filter-author" class="form-select">
+              <option value="all">All Authors</option>
+              <option value="auth-martin">Robert C. Martin</option>
+              <option value="auth-fowler">Martin Fowler</option>
+              <option value="auth-cormen">Thomas H. Cormen</option>
+              <option value="auth-clear">James Clear</option>
+              <option value="auth-orwell">George Orwell</option>
+            </select>
+          </div>
+
+          <!-- Publisher Filter -->
+          <div class="filter-group">
+            <label for="filter-publisher" class="filter-title">Publisher</label>
+            <select id="filter-publisher" class="form-select">
+              <option value="all">All Publishers</option>
+              <option value="pub-prentice">Prentice Hall</option>
+              <option value="pub-oreilly">O'Reilly Media</option>
+              <option value="pub-mit">MIT Press</option>
+              <option value="pub-penguin">Penguin Random House</option>
+            </select>
+          </div>
+
+          <!-- Price Range Slider -->
+          <div class="filter-group">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+              <label for="filter-price-range" class="filter-title" style="margin-bottom:0;">Max Price</label>
+              <span id="filter-price-display" style="font-weight:700;color:var(--secondary-color);">$150</span>
+            </div>
+            <input type="range" id="filter-price-range" min="10" max="150" value="150" step="5" style="width:100%;">
+          </div>
+        </aside>
+
+        <!-- Main Catalog Area -->
+        <div>
+          <!-- Top Sorting & Counter Bar -->
+          <div style="display:flex;justify-content:space-between;align-items:center;background-color:var(--card-bg);border:1px solid var(--card-border);padding:1rem 1.5rem;border-radius:var(--radius-md);margin-bottom:1.75rem;flex-wrap:wrap;gap:1rem;">
+            <div id="results-count-text" style="font-weight:600;color:var(--text-main);">Showing 0 Books</div>
+            
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+              <label for="filter-sort" style="font-size:0.9rem;font-weight:600;color:var(--text-muted);">Sort By:</label>
+              <select id="filter-sort" class="form-select" style="width:auto;padding:0.4rem 0.85rem;font-size:0.9rem;">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="popular">Most Popular</option>
+                <option value="rating">Highest Rated</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Books Grid -->
+          <div class="books-grid" id="catalog-books-grid">
+            <!-- Rendered by Search Engine -->
+          </div>
+
+          <!-- Pagination -->
+          <div id="catalog-pagination-container"></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script type="module" src="/js/firebase-config.js"></script>
+  <script type="module" src="/js/utils.js"></script>
+  <script type="module" src="/js/navbar.js"></script>
+  <script type="module" src="/js/footer.js"></script>
+
+  <script type="module">
+    import { BookSearchEngine } from "/js/search.js";
+
+    const searchEngine = new BookSearchEngine(
+      "catalog-books-grid",
+      "catalog-pagination-container",
+      "results-count-text"
+    );
+
+    searchEngine.init();
+
+    // Check query params if page loaded with ?search= or ?category=
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialQuery = urlParams.get("search") || urlParams.get("q");
+    const initialCategory = urlParams.get("category") || urlParams.get("cat");
+    const initialSort = urlParams.get("sort");
+
+    if (initialQuery) {
+      const searchInput = document.getElementById("search-input");
+      if (searchInput) searchInput.value = initialQuery;
+      searchEngine.filters.query = initialQuery.toLowerCase();
+    }
+
+    if (initialCategory) {
+      const categorySelect = document.getElementById("filter-category");
+      if (categorySelect) categorySelect.value = initialCategory;
+      searchEngine.filters.category = initialCategory;
+    }
+
+    if (initialSort) {
+      const sortSelect = document.getElementById("filter-sort");
+      if (sortSelect) sortSelect.value = initialSort;
+      searchEngine.filters.sortBy = initialSort;
+    }
+
+    if (initialQuery || initialCategory || initialSort) {
+      searchEngine.applyFilters();
+    }
+  </script>
+</body>
+</html>

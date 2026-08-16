@@ -1,0 +1,193 @@
+// ==========================================================================
+// BookMart - Category Service & UI Handler (js/categories.js)
+// ==========================================================================
+
+import { collection, getDocs, doc, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { db } from "./firebase-config.js";
+import { sampleCategories, sampleBooks } from "./seed-data.js";
+import { renderStarRating, formatCurrency } from "./utils.js";
+
+let categoriesCache = null;
+
+/**
+ * Fetch all categories from Firestore (with fast caching & fallback)
+ * @returns {Promise<Array>}
+ */
+export async function fetchCategories() {
+  if (categoriesCache && categoriesCache.length > 0) {
+    return categoriesCache;
+  }
+
+  try {
+    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 1500));
+    const fetchPromise = getDocs(collection(db, "categories"));
+    const querySnapshot = await Promise.race([fetchPromise, timeoutPromise]);
+
+    if (querySnapshot && !querySnapshot.empty) {
+      const categories = [];
+      querySnapshot.forEach(docSnap => {
+        categories.push({ id: docSnap.id, ...docSnap.data() });
+      });
+      categoriesCache = categories;
+      return categories;
+    }
+  } catch (error) {
+    // Network delay fallback
+  }
+
+  categoriesCache = sampleCategories;
+  return sampleCategories;
+}
+
+/**
+ * Fetch category by ID or Slug
+ * @param {string} identifier 
+ * @returns {Promise<Object|null>}
+ */
+export async function fetchCategoryByIdOrSlug(identifier) {
+  if (!identifier) return null;
+
+  const categories = await fetchCategories();
+  const match = categories.find(c => c.id === identifier || c.slug === identifier.toLowerCase());
+  if (match) return match;
+
+  try {
+    const docRef = doc(db, "categories", identifier);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return { id: docSnap.id, ...docSnap.data() };
+    }
+  } catch (err) {
+    console.warn("Category fetch error:", err);
+  }
+
+  return sampleCategories.find(c => c.id === identifier || c.slug === identifier.toLowerCase()) || null;
+}
+
+/**
+ * Render Category Grid Cards
+ * @param {string} containerId 
+ */
+export async function renderCategoryGrid(containerId = "categories-grid-container") {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  const categories = await fetchCategories();
+
+  if (categories.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state" style="grid-column: 1 / -1;">
+        <div class="empty-state-icon">📂</div>
+        <h3>No Categories Found</h3>
+        <p>Categories will appear here once added by the store administrator.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = categories.map(cat => `
+    <a href="/category.html?id=${cat.id}" class="category-card">
+      <img src="${cat.image || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&q=80'}" alt="${cat.name}" loading="lazy">
+      <h3>${cat.name}</h3>
+      <span>${cat.description ? (cat.description.substring(0, 50) + '...') : ''}</span>
+      <div style="margin-top: 0.65rem; font-size: 0.8rem; font-weight: 700; color: var(--secondary-color);">
+        ${cat.bookCount || 0} Books Available
+      </div>
+    </a>
+  `).join('');
+}
+
+/**
+ * Render Category Details Page with Filtered Books
+ * @param {string} categoryIdentifier 
+ */
+export async function renderCategoryDetailPage(categoryIdentifier) {
+  const bannerContainer = document.getElementById("category-banner-container");
+  const booksContainer = document.getElementById("category-books-container");
+  if (!bannerContainer || !booksContainer) return;
+
+  const category = await fetchCategoryByIdOrSlug(categoryIdentifier);
+
+  if (!category) {
+    bannerContainer.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">🔍</div>
+        <h3>Category Not Found</h3>
+        <p>The requested book category could not be located.</p>
+        <a href="/categories.html" class="btn btn-primary">Browse All Categories</a>
+      </div>
+    `;
+    booksContainer.innerHTML = '';
+    return;
+  }
+
+  document.title = `${category.name} Books - BookMart`;
+
+  bannerContainer.innerHTML = `
+    <div class="hero-section" style="background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); min-height: 200px; padding: 2.5rem 2rem;">
+      <div class="hero-content">
+        <span class="badge badge-warning" style="margin-bottom:0.75rem;">Category Catalog</span>
+        <h1 style="font-size: 2.2rem; color: #FFF;">${category.name} Books</h1>
+        <p style="color: #94A3B8; margin-bottom: 0;">${category.description || 'Explore our complete collection of titles in ' + category.name}</p>
+      </div>
+      <div class="hero-image" style="display: flex; justify-content: flex-end;">
+        <img src="${category.image || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&q=80'}" alt="${category.name}" style="width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 3px solid var(--secondary-color);">
+      </div>
+    </div>
+  `;
+
+  let categoryBooks = sampleBooks.filter(b => b.categoryId === category.id || b.categoryName.toLowerCase() === category.name.toLowerCase());
+
+  try {
+    const q = query(collection(db, "books"), where("categoryId", "==", category.id));
+    const qSnap = await getDocs(q);
+    if (!qSnap.empty) {
+      const fetched = [];
+      qSnap.forEach(docSnap => fetched.push({ id: docSnap.id, ...docSnap.data() }));
+      if (fetched.length > 0) categoryBooks = fetched;
+    }
+  } catch (err) {
+    console.warn("Firestore category books fetch error:", err);
+  }
+
+  if (categoryBooks.length === 0) {
+    booksContainer.innerHTML = `
+      <div class="empty-state" style="grid-column: 1 / -1;">
+        <div class="empty-state-icon">📚</div>
+        <h3>No Books in ${category.name}</h3>
+        <p>We are currently stocking new titles for this section. Check back soon!</p>
+        <a href="/books.html" class="btn btn-outline">Explore All Books</a>
+      </div>
+    `;
+    return;
+  }
+
+  booksContainer.innerHTML = categoryBooks.map(book => `
+    <div class="book-card">
+      <div class="book-cover-wrap">
+        <img src="${book.coverImage}" alt="${book.title}" loading="lazy">
+        <a href="/book-details.html?id=${book.id}" style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:1;"></a>
+      </div>
+      <div class="book-details-wrap">
+        <div class="book-category-tag">${book.categoryName || category.name}</div>
+        <h3 class="book-title">
+          <a href="/book-details.html?id=${book.id}">${book.title}</a>
+        </h3>
+        <div class="book-author">by ${book.authorName}</div>
+        <div class="book-rating">
+          ${renderStarRating(book.rating || 5)}
+          <span>(${book.reviewCount || 0})</span>
+        </div>
+        <div class="book-price-row">
+          <div class="price-box">
+            <span class="current-price">${formatCurrency(book.discountPrice || book.price)}</span>
+            ${book.discountPrice ? `<span class="original-price">${formatCurrency(book.price)}</span>` : ''}
+          </div>
+          <button class="btn btn-sm btn-primary add-to-cart-btn" data-book-id="${book.id}" style="z-index:5;">
+            🛒 Add
+          </button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Category Books - BookMart</title>
+  <meta name="description" content="Explore selected books for this category at BookMart.">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/shop.css">
+</head>
+<body>
+
+  <main class="main-content">
+    <div class="container">
+      <!-- Category Banner Container -->
+      <div id="category-banner-container"></div>
+
+      <!-- Filtered Books Grid -->
+      <div style="margin-top: 2rem;">
+        <h2 style="margin-bottom: 1.5rem;" id="category-section-title">Available Books</h2>
+        <div class="books-grid" id="category-books-container">
+          <!-- Dynamic Book Cards Loaded Here -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="/js/firebase-config.js"></script>
+  <script type="module" src="/js/utils.js"></script>
+  <script type="module" src="/js/navbar.js"></script>
+  <script type="module" src="/js/footer.js"></script>
+
+  <script type="module">
+    import { renderCategoryDetailPage } from "/js/categories.js";
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryId = urlParams.get("id") || urlParams.get("slug") || "cat-prog";
+    
+    renderCategoryDetailPage(categoryId);
+  </script>
+</body>
+</html>

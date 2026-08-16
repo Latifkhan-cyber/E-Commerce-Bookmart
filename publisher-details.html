@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Publisher Details - BookMart</title>
+  <meta name="description" content="View publisher details and published books on BookMart.">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/shop.css">
+</head>
+<body>
+
+  <main class="main-content">
+    <div class="container">
+      <!-- Publisher Profile Container -->
+      <div id="publisher-profile-container"></div>
+
+      <!-- Published Books Section -->
+      <div style="margin-top: 2rem;">
+        <h2 style="margin-bottom: 1.5rem;">Titles Published by this House</h2>
+        <div class="books-grid" id="publisher-books-container">
+          <!-- Dynamic Published Books Loaded Here -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="/js/firebase-config.js"></script>
+  <script type="module" src="/js/utils.js"></script>
+  <script type="module" src="/js/navbar.js"></script>
+  <script type="module" src="/js/footer.js"></script>
+
+  <script type="module">
+    import { renderPublisherDetailPage } from "/js/publishers.js";
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const publisherId = urlParams.get("id") || "pub-prentice";
+
+    renderPublisherDetailPage(publisherId);
+  </script>
+</body>
+</html>

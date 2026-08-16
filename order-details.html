@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Tracking & Details - BookMart</title>
+  <meta name="description" content="Track your order delivery progress and view order breakdown at BookMart.">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/account.css">
+  <link rel="stylesheet" href="/css/cart.css">
+</head>
+<body>
+
+  <main class="main-content">
+    <div class="container">
+      
+      <!-- Order Tracking Content Container -->
+      <div id="order-tracking-content">
+        <!-- Rendered dynamically by js/orders.js -->
+      </div>
+
+    </div>
+  </main>
+
+  <script type="module" src="/js/firebase-config.js"></script>
+  <script type="module" src="/js/utils.js"></script>
+  <script type="module" src="/js/navbar.js"></script>
+  <script type="module" src="/js/footer.js"></script>
+
+  <script type="module">
+    import { renderOrderTrackingPage } from "/js/orders.js";
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const orderId = urlParams.get("id");
+
+    if (orderId) {
+      renderOrderTrackingPage(orderId);
+    } else {
+      window.location.href = "/orders.html";
+    }
+  </script>
+</body>
+</html>

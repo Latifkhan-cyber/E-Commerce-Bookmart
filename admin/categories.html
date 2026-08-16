@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Categories - BookMart</title>
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <div class="admin-logo">📚 Book<span>Mart</span> Admin</div>
+      <ul class="admin-menu-list">
+        <li><a href="/admin/index.html" class="admin-menu-item">📊 Dashboard</a></li>
+        <li><a href="/admin/books.html" class="admin-menu-item">📖 Books Catalog</a></li>
+        <li><a href="/admin/categories.html" class="admin-menu-item active">📂 Categories</a></li>
+        <li><a href="/admin/authors.html" class="admin-menu-item">✍️ Authors</a></li>
+        <li><a href="/admin/publishers.html" class="admin-menu-item">🏢 Publishers</a></li>
+        <li><a href="/admin/orders.html" class="admin-menu-item">📦 Customer Orders</a></li>
+      </ul>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-top-bar">
+        <div>
+          <h1 style="font-size:1.8rem;margin-bottom:0.25rem;">Category Management</h1>
+          <p style="color:var(--text-muted);">Manage bookstore subjects and categories.</p>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1.2fr 0.8fr;gap:2rem;">
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Slug</th>
+                <th>Book Count</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="admin-categories-table-body">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+
+        <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:2rem;height:fit-content;">
+          <h3 style="margin-bottom:1.25rem;">Create New Category</h3>
+          <form id="add-category-form">
+            <div class="form-group">
+              <label for="cat-name" class="form-label">Category Name *</label>
+              <input type="text" id="cat-name" class="form-input" placeholder="e.g. Competitive Exams" required>
+            </div>
+            <div class="form-group">
+              <label for="cat-slug" class="form-label">Category Slug *</label>
+              <input type="text" id="cat-slug" class="form-input" placeholder="competitive-exams" required>
+            </div>
+            <div class="form-group">
+              <label for="cat-desc" class="form-label">Description</label>
+              <textarea id="cat-desc" class="form-textarea" rows="3" placeholder="Category brief overview..."></textarea>
+            </div>
+            <div class="form-group">
+              <label for="cat-img" class="form-label">Category Banner Image URL</label>
+              <input type="url" id="cat-img" class="form-input" placeholder="https://images.unsplash.com/...">
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%;">Create Category</button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="/js/firebase-config.js"></script>
+  <script type="module" src="/js/utils.js"></script>
+  <script type="module" src="/js/admin/admin-auth.js"></script>
+
+  <script type="module">
+    import { renderAdminCategoriesTable, saveAdminCategory } from "/js/admin/categories.js";
+
+    renderAdminCategoriesTable();
+
+    document.getElementById("add-category-form")?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("cat-name").value;
+      const slug = document.getElementById("cat-slug").value;
+      const desc = document.getElementById("cat-desc").value;
+      const img = document.getElementById("cat-img").value;
+
+      const success = await saveAdminCategory(name, slug, desc, img);
+      if (success) {
+        document.getElementById("add-category-form").reset();
+        renderAdminCategoriesTable();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,27 +1,24 @@
 {
-  "name": "bookmart-monorepo",
+  "name": "bookmart",
   "version": "1.0.0",
-  "description": "BookMart Full-Stack Online Bookstore",
-  "main": "backend/server.js",
+  "description": "BookMart - Modern E-Commerce Bookstore built with Vanilla JS, HTML5, CSS3 and Firebase",
+  "main": "index.html",
   "scripts": {
-    "backend": "npm --prefix backend start",
-    "backend:dev": "npm --prefix backend run dev",
-    "frontend": "npm --prefix frontend run dev",
-    "dev": "concurrently \"npm run backend:dev\" \"npm run frontend\"",
-    "seed": "npm --prefix backend run seed",
-    "install:all": "npm install && npm --prefix backend install && npm --prefix frontend install"
-  },
-  "devDependencies": {
-    "concurrently": "^8.2.2"
+    "start": "npx serve -l 3000 .",
+    "deploy": "firebase deploy"
   },
   "keywords": [
     "bookstore",
     "ecommerce",
-    "express",
-    "react",
-    "mongodb",
-    "redux-toolkit"
+    "firebase",
+    "firestore",
+    "vanilla-js",
+    "html5",
+    "css3"
   ],
   "author": "BookMart Team",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.3"
+  }
 }

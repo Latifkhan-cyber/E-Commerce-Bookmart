@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Publishers - BookMart</title>
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <div class="admin-logo">📚 Book<span>Mart</span> Admin</div>
+      <ul class="admin-menu-list">
+        <li><a href="/admin/index.html" class="admin-menu-item">📊 Dashboard</a></li>
+        <li><a href="/admin/books.html" class="admin-menu-item">📖 Books Catalog</a></li>
+        <li><a href="/admin/categories.html" class="admin-menu-item">📂 Categories</a></li>
+        <li><a href="/admin/authors.html" class="admin-menu-item">✍️ Authors</a></li>
+        <li><a href="/admin/publishers.html" class="admin-menu-item active">🏢 Publishers</a></li>
+        <li><a href="/admin/orders.html" class="admin-menu-item">📦 Customer Orders</a></li>
+      </ul>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-top-bar">
+        <div>
+          <h1 style="font-size:1.8rem;margin-bottom:0.25rem;">Publisher Management</h1>
+          <p style="color:var(--text-muted);">Manage publishing partners and logos.</p>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1.2fr 0.8fr;gap:2rem;">
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Logo</th>
+                <th>Publisher Name</th>
+                <th>Description</th>
+                <th>Titles</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="admin-publishers-table-body">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+
+        <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:2rem;height:fit-content;">
+          <h3 style="margin-bottom:1.25rem;">Add New Publisher</h3>
+          <form id="add-publisher-form">
+            <div class="form-group">
+              <label for="pub-name" class="form-label">Publisher Name *</label>
+              <input type="text" id="pub-name" class="form-input" placeholder="e.g. Addison-Wesley" required>
+            </div>
+            <div class="form-group">
+              <label for="pub-desc" class="form-label">Description *</label>
+              <textarea id="pub-desc" class="form-textarea" rows="3" placeholder="Publisher details..." required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="pub-logo" class="form-label">Publisher Logo URL</label>
+              <input type="url" id="pub-logo" class="form-input" placeholder="https://images.unsplash.com/...">
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%;">Save Publisher</button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="/js/firebase-config.js"></script>
+  <script type="module" src="/js/utils.js"></script>
+  <script type="module" src="/js/admin/admin-auth.js"></script>
+
+  <script type="module">
+    import { renderAdminPublishersTable, saveAdminPublisher } from "/js/admin/publishers.js";
+
+    renderAdminPublishersTable();
+
+    document.getElementById("add-publisher-form")?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("pub-name").value;
+      const desc = document.getElementById("pub-desc").value;
+      const logo = document.getElementById("pub-logo").value;
+
+      const success = await saveAdminPublisher(name, desc, logo);
+      if (success) {
+        document.getElementById("add-publisher-form").reset();
+        renderAdminPublishersTable();
+      }
+    });
+  </script>
+</body>
+</html>

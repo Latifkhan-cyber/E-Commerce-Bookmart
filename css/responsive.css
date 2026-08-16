@@ -1,0 +1,96 @@
+/* ==========================================================================
+   BookMart - Responsive Rules & Media Queries (css/responsive.css)
+   ========================================================================== */
+
+/* Laptop & Large Desktop (1024px and up) */
+@media (max-width: 1200px) {
+  .footer-grid {
+    grid-template-columns: 1.5fr repeat(3, 1fr);
+    gap: 2rem;
+  }
+}
+
+/* Tablet & Mobile Header Transition (Under 1024px) */
+@media (max-width: 1024px) {
+  .nav-menu {
+    position: fixed;
+    top: var(--navbar-height);
+    left: -100%;
+    width: 280px;
+    height: calc(100vh - var(--navbar-height));
+    background-color: var(--card-bg);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 2rem 1.5rem;
+    box-shadow: var(--shadow-lg);
+    transition: var(--transition);
+    border-right: 1px solid var(--card-border);
+  }
+
+  .nav-menu.active {
+    left: 0;
+  }
+
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 5px;
+  }
+
+  .hamburger span {
+    width: 24px;
+    height: 2.5px;
+    background-color: var(--text-main);
+    border-radius: 2px;
+    transition: var(--transition);
+  }
+}
+
+/* Tablet (Under 768px) */
+@media (max-width: 768px) {
+  h1 { font-size: 1.85rem; }
+  h2 { font-size: 1.45rem; }
+  h3 { font-size: 1.2rem; }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+}
+
+/* Mobile Screens (320px - 425px) */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 0.85rem;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+
+  .btn-lg {
+    width: 100%;
+  }
+
+  #toast-container {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+  }
+
+  .toast {
+    min-width: unset;
+    width: 100%;
+  }
+}

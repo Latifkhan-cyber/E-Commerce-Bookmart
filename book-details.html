@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Details - BookMart</title>
+  <meta name="description" content="Detailed book information, customer reviews, ratings, specs, and related titles at BookMart.">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/shop.css">
+</head>
+<body>
+
+  <main class="main-content">
+    <div class="container">
+      
+      <!-- Book Details Main Container -->
+      <div id="book-details-content">
+        <!-- Rendered dynamically by js/book-details.js -->
+      </div>
+
+    </div>
+  </main>
+
+  <script type="module" src="/js/firebase-config.js"></script>
+  <script type="module" src="/js/utils.js"></script>
+  <script type="module" src="/js/navbar.js"></script>
+  <script type="module" src="/js/footer.js"></script>
+
+  <script type="module">
+    import { renderBookDetails } from "/js/book-details.js";
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const bookId = urlParams.get("id") || "book-001";
+
+    renderBookDetails(bookId);
+  </script>
+</body>
+</html>

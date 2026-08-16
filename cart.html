@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopping Cart - BookMart</title>
+  <meta name="description" content="View items in your BookMart shopping cart, update quantities, and calculate subtotals.">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/cart.css">
+</head>
+<body>
+
+  <main class="main-content">
+    <div class="container">
+      
+      <div style="margin-bottom: 2rem;">
+        <span class="badge badge-info" style="margin-bottom:0.5rem;">Shopping Cart</span>
+        <h1>Your Shopping Cart</h1>
+      </div>
+
+      <!-- Cart Grid Layout -->
+      <div class="cart-layout">
+        <!-- Table Area -->
+        <div id="cart-items-container">
+          <!-- Rendered dynamically by js/cart.js -->
+        </div>
+
+        <!-- Summary Area -->
+        <div id="cart-summary-container">
+          <!-- Rendered dynamically by js/cart.js -->
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script type="module" src="/js/firebase-config.js"></script>
+  <script type="module" src="/js/utils.js"></script>
+  <script type="module" src="/js/navbar.js"></script>
+  <script type="module" src="/js/footer.js"></script>
+
+  <script type="module">
+    import { renderCartPage } from "/js/cart.js";
+    renderCartPage();
+  </script>
+</body>
+</html>

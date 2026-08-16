@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Book - BookMart Admin</title>
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <div class="admin-logo">📚 Book<span>Mart</span> Admin</div>
+      <ul class="admin-menu-list">
+        <li><a href="/admin/index.html" class="admin-menu-item">📊 Dashboard</a></li>
+        <li><a href="/admin/books.html" class="admin-menu-item active">📖 Books Catalog</a></li>
+        <li><a href="/admin/categories.html" class="admin-menu-item">📂 Categories</a></li>
+        <li><a href="/admin/authors.html" class="admin-menu-item">✍️ Authors</a></li>
+        <li><a href="/admin/publishers.html" class="admin-menu-item">🏢 Publishers</a></li>
+        <li><a href="/admin/orders.html" class="admin-menu-item">📦 Customer Orders</a></li>
+      </ul>
+    </aside>
+
+    <main class="admin-main">
+      <div class="admin-top-bar">
+        <div>
+          <h1 style="font-size:1.8rem;margin-bottom:0.25rem;">Edit Book Record</h1>
+          <p style="color:var(--text-muted);">Modify pricing, stock, description, or details.</p>
+        </div>
+        <a href="/admin/books.html" class="btn btn-outline">← Back to Books</a>
+      </div>
+
+      <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--radius-lg);padding:2.5rem;max-width:800px;">
+        <form id="edit-book-form">
+          <div class="form-group">
+            <label for="edit-title" class="form-label">Book Title *</label>
+            <input type="text" id="edit-title" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label for="edit-description" class="form-label">Description *</label>
+            <textarea id="edit-description" class="form-textarea" rows="4" required></textarea>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;">
+            <div class="form-group">
+              <label for="edit-price" class="form-label">Regular Price ($) *</label>
+              <input type="number" step="0.01" id="edit-price" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+              <label for="edit-discount-price" class="form-label">Discount Price ($)</label>
+              <input type="number" step="0.01" id="edit-discount-price" class="form-input">
+            </div>
+
+            <div class="form-group">
+              <label for="edit-stock" class="form-label">Stock Quantity *</label>
+              <input type="number" id="edit-stock" class="form-input" required>
+            </div>
+          </div>
+
+          <button type="submit" id="update-book-btn" class="btn btn-lg btn-primary" style="width:100%;margin-top:1rem;">
+            Update Book Details
+          </button>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="/js/firebase-config.js"></script>
+  <script type="module" src="/js/utils.js"></script>
+  <script type="module" src="/js/admin/admin-auth.js"></script>
+
+  <script type="module">
+    import { fetchAdminBooks, saveAdminBook } from "/js/admin/books.js";
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const bookId = urlParams.get("id");
+
+    fetchAdminBooks().then(books => {
+      const book = books.find(b => b.id === bookId);
+      if (book) {
+        document.getElementById("edit-title").value = book.title || "";
+        document.getElementById("edit-description").value = book.description || "";
+        document.getElementById("edit-price").value = book.price || "";
+        document.getElementById("edit-discount-price").value = book.discountPrice || "";
+        document.getElementById("edit-stock").value = book.stock || 0;
+
+        document.getElementById("edit-book-form")?.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const formData = {
+            title: document.getElementById("edit-title").value,
+            description: document.getElementById("edit-description").value,
+            authorId: book.authorId,
+            authorName: book.authorName,
+            categoryId: book.categoryId,
+            categoryName: book.categoryName,
+            publisherId: book.publisherId,
+            publisherName: book.publisherName,
+            isbn: book.isbn,
+            price: document.getElementById("edit-price").value,
+            discountPrice: document.getElementById("edit-discount-price").value,
+            stock: document.getElementById("edit-stock").value,
+            coverImage: book.coverImage
+          };
+
+          const success = await saveAdminBook(formData, null, bookId);
+          if (success) {
+            setTimeout(() => { window.location.href = "/admin/books.html"; }, 800);
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

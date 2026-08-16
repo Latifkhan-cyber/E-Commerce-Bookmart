@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Wishlist - BookMart</title>
+  <meta name="description" content="View saved books in your BookMart customer wishlist.">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/shop.css">
+</head>
+<body>
+
+  <main class="main-content">
+    <div class="container">
+      
+      <div style="margin-bottom: 2rem;">
+        <span class="badge badge-warning" style="margin-bottom:0.5rem;">Saved Titles</span>
+        <h1>My Wishlist</h1>
+        <p style="color: var(--text-muted);">Manage books you've saved for future reading or purchase.</p>
+      </div>
+
+      <!-- Wishlist Grid -->
+      <div class="books-grid" id="wishlist-grid-container">
+        <!-- Rendered dynamically by js/wishlist.js -->
+      </div>
+
+    </div>
+  </main>
+
+  <script type="module" src="/js/firebase-config.js"></script>
+  <script type="module" src="/js/utils.js"></script>
+  <script type="module" src="/js/navbar.js"></script>
+  <script type="module" src="/js/footer.js"></script>
+
+  <script type="module">
+    import { renderWishlistPage } from "/js/wishlist.js";
+    renderWishlistPage();
+  </script>
+</body>
+</html>

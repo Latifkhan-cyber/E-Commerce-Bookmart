@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Categories - BookMart</title>
+  <meta name="description" content="Browse books by category at BookMart: Programming, Computer Science, Fiction, Business, Medical, Science, History, and more.">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/shop.css">
+</head>
+<body>
+
+  <main class="main-content">
+    <div class="container">
+      <div style="margin-bottom: 2.5rem;">
+        <span class="badge badge-info" style="margin-bottom:0.5rem;">Book Categories</span>
+        <h1 style="margin-bottom: 0.5rem;">Browse by Category</h1>
+        <p style="color: var(--text-muted); max-width: 600px;">
+          Find your next favorite read by exploring our structured bookstore categories, from software engineering to timeless literary fiction.
+        </p>
+      </div>
+
+      <!-- Categories Grid -->
+      <div class="category-grid" id="categories-grid-container" style="grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));">
+        <!-- Dynamic Category Cards Loaded Here -->
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="/js/firebase-config.js"></script>
+  <script type="module" src="/js/utils.js"></script>
+  <script type="module" src="/js/navbar.js"></script>
+  <script type="module" src="/js/footer.js"></script>
+
+  <script type="module">
+    import { renderCategoryGrid } from "/js/categories.js";
+    renderCategoryGrid("categories-grid-container");
+  </script>
+</body>
+</html>

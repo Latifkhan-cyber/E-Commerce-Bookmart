@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - BookMart</title>
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+
+  <div class="admin-layout">
+    <!-- Admin Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-logo">📚 Book<span>Mart</span> Admin</div>
+      <ul class="admin-menu-list">
+        <li><a href="/admin/index.html" class="admin-menu-item active">📊 Dashboard</a></li>
+        <li><a href="/admin/books.html" class="admin-menu-item">📖 Books Catalog</a></li>
+        <li><a href="/admin/categories.html" class="admin-menu-item">📂 Categories</a></li>
+        <li><a href="/admin/authors.html" class="admin-menu-item">✍️ Authors</a></li>
+        <li><a href="/admin/publishers.html" class="admin-menu-item">🏢 Publishers</a></li>
+        <li><a href="/admin/orders.html" class="admin-menu-item">📦 Customer Orders</a></li>
+        <li><a href="/admin/customers.html" class="admin-menu-item">👥 Customer Accounts</a></li>
+        <li><a href="/admin/inventory.html" class="admin-menu-item">⚠️ Stock Inventory</a></li>
+        <li><a href="/admin/coupons.html" class="admin-menu-item">🏷️ Promo Coupons</a></li>
+        <li style="margin-top:2rem;"><a href="/index.html" class="admin-menu-item" style="color:var(--secondary-color);">🌐 View Customer Site</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="admin-main">
+      <div class="admin-top-bar">
+        <div>
+          <h1 style="font-size:1.8rem;margin-bottom:0.25rem;">Store Analytics & Overview</h1>
+          <p style="color:var(--text-muted);">Realtime Firestore metric counters and store activity.</p>
+        </div>
+        <div style="display:flex;gap:0.75rem;">
+          <button id="seed-database-btn" class="btn btn-outline" style="color:var(--accent-color);border-color:var(--accent-color);">🌱 Seed Sample Data</button>
+          <a href="/admin/book-create.html" class="btn btn-primary">+ Add New Book</a>
+        </div>
+      </div>
+
+      <!-- Stats Metrics Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-header"><span>Total Catalog Books</span> <span>📚</span></div>
+          <div class="stat-value" id="admin-stat-books">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header"><span>Registered Customers</span> <span>👥</span></div>
+          <div class="stat-value" id="admin-stat-customers">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header"><span>Total Orders Placed</span> <span>📦</span></div>
+          <div class="stat-value" id="admin-stat-orders">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header"><span>Total Revenue Generated</span> <span>💰</span></div>
+          <div class="stat-value" id="admin-stat-revenue" style="color:var(--accent-color);">$0.00</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header"><span>Pending Processing</span> <span>⏳</span></div>
+          <div class="stat-value" id="admin-stat-pending" style="color:var(--warning-color);">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header"><span>Delivered Orders</span> <span>✓</span></div>
+          <div class="stat-value" id="admin-stat-delivered">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header"><span>Low Stock Warnings</span> <span>⚠️</span></div>
+          <div class="stat-value" id="admin-stat-lowstock" style="color:var(--danger-color);">0</div>
+        </div>
+      </div>
+
+      <!-- Data Tables Grid -->
+      <div style="display:grid;grid-template-columns:1.2fr 0.8fr;gap:2rem;">
+        
+        <!-- Recent Orders Table -->
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+            <h3>Recent Customer Orders</h3>
+            <a href="/admin/orders.html" style="font-size:0.85rem;color:var(--secondary-color);font-weight:600;">View All →</a>
+          </div>
+
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Date</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="recent-orders-table-body">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Low Stock Alerts Table -->
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+            <h3 style="color:var(--danger-color);">⚠️ Low Stock Alerts</h3>
+            <a href="/admin/inventory.html" style="font-size:0.85rem;color:var(--secondary-color);font-weight:600;">Manage →</a>
+          </div>
+
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Book Title</th>
+                  <th>Category</th>
+                  <th>Stock Left</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="low-stock-table-body">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="/js/firebase-config.js"></script>
+  <script type="module" src="/js/utils.js"></script>
+  <script type="module" src="/js/admin/admin-auth.js"></script>
+
+  <script type="module">
+    import { loadAdminDashboardMetrics } from "/js/admin/dashboard.js";
+    import { seedFirestoreDatabase } from "/js/seed-data.js";
+    import { db } from "/js/firebase-config.js";
+    import { showToast } from "/js/utils.js";
+
+    loadAdminDashboardMetrics();
+
+    document.getElementById("seed-database-btn")?.addEventListener("click", async () => {
+      if (!confirm("Populate Firestore with sample Books, Categories, Authors, Publishers, and Coupons?")) return;
+
+      const btn = document.getElementById("seed-database-btn");
+      btn.disabled = true;
+      btn.textContent = "Seeding Database...";
+
+      try {
+        await seedFirestoreDatabase(db);
+        showToast("Firestore database seeded successfully with 20+ books!", "success");
+        setTimeout(() => {
+          loadAdminDashboardMetrics();
+          btn.disabled = false;
+          btn.textContent = "🌱 Seed Sample Data";
+        }, 1200);
+      } catch (err) {
+        console.error("Seeding error:", err);
+        showToast("Error seeding database. Make sure Firebase config keys are populated.", "error");
+        btn.disabled = false;
+        btn.textContent = "🌱 Seed Sample Data";
+      }
+    });
+  </script>
+</body>
+</html>

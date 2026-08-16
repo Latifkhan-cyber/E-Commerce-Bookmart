@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - BookMart</title>
+  <meta name="description" content="Complete your book order safely with Cash on Delivery at BookMart.">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/checkout.css">
+</head>
+<body>
+
+  <main class="main-content">
+    <div class="container">
+      
+      <div style="margin-bottom: 2rem;">
+        <span class="badge badge-success" style="margin-bottom:0.5rem;">Secure Checkout</span>
+        <h1>Order Checkout</h1>
+      </div>
+
+      <form id="checkout-form">
+        <div class="checkout-layout">
+          
+          <!-- Left Column: Shipping & Payment -->
+          <div>
+            <!-- Saved Addresses Selector (if user has saved addresses) -->
+            <div class="checkout-section">
+              <h3 class="checkout-section-title">📍 Shipping Address</h3>
+              
+              <div id="saved-addresses-grid" class="address-grid">
+                <!-- Rendered dynamically if saved addresses exist -->
+              </div>
+
+              <!-- Shipping Address Fields -->
+              <div class="form-group">
+                <label for="ship-name" class="form-label">Full Name</label>
+                <input type="text" id="ship-name" class="form-input" placeholder="John Doe" required>
+              </div>
+
+              <div class="form-group">
+                <label for="ship-phone" class="form-label">Phone Number</label>
+                <input type="tel" id="ship-phone" class="form-input" placeholder="+1 (555) 000-0000" required>
+              </div>
+
+              <div class="form-group">
+                <label for="ship-address" class="form-label">Street Address</label>
+                <input type="text" id="ship-address" class="form-input" placeholder="123 Main Street, Apt 4B" required>
+              </div>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <div class="form-group">
+                  <label for="ship-city" class="form-label">City</label>
+                  <input type="text" id="ship-city" class="form-input" placeholder="New York" required>
+                </div>
+                <div class="form-group">
+                  <label for="ship-province" class="form-label">State / Province</label>
+                  <input type="text" id="ship-province" class="form-input" placeholder="NY" required>
+                </div>
+              </div>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <div class="form-group">
+                  <label for="ship-postal" class="form-label">Postal / Zip Code</label>
+                  <input type="text" id="ship-postal" class="form-input" placeholder="10001" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Country</label>
+                  <input type="text" class="form-input" value="United States" disabled>
+                </div>
+              </div>
+            </div>
+
+            <!-- Payment Method Selection -->
+            <div class="checkout-section">
+              <h3 class="checkout-section-title">💳 Payment Method</h3>
+              
+              <div class="payment-method-box selected">
+                <span style="font-size:1.8rem;">💵</span>
+                <div>
+                  <div style="font-weight:700;">Cash on Delivery (COD)</div>
+                  <div style="font-size:0.85rem;color:var(--text-muted);">Pay in cash when your order is delivered to your doorstep.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Order Review & Coupon -->
+          <div>
+            <div class="cart-summary-card" style="position:sticky;top:calc(var(--navbar-height) + 1.5rem);">
+              <h3 class="cart-summary-title">Order Review</h3>
+
+              <!-- Items Summary -->
+              <div id="checkout-items-summary" style="margin-bottom:1.25rem;max-height:220px;overflow-y:auto;">
+                <!-- Rendered dynamically by js/checkout.js -->
+              </div>
+
+              <!-- Coupon Code Box -->
+              <div style="margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border-light);">
+                <label for="coupon-code-input" class="form-label" style="font-size:0.85rem;">Have a Promo Coupon?</label>
+                <div style="display:flex;gap:0.5rem;">
+                  <input type="text" id="coupon-code-input" placeholder="e.g. WELCOME10" class="form-input" style="text-transform:uppercase;font-size:0.9rem;">
+                  <button type="button" id="apply-coupon-btn" class="btn btn-sm btn-outline">Apply</button>
+                </div>
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.35rem;">Try code: <strong>WELCOME10</strong> or <strong>SALE20</strong></div>
+              </div>
+
+              <!-- Totals Breakdown -->
+              <div id="checkout-totals-summary">
+                <!-- Rendered dynamically by js/checkout.js -->
+              </div>
+
+              <button type="submit" id="place-order-btn" class="btn btn-lg btn-accent" style="width:100%;margin-top:1.5rem;">
+                Place Order (Cash on Delivery)
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </form>
+
+    </div>
+  </main>
+
+  <script type="module" src="/js/firebase-config.js"></script>
+  <script type="module" src="/js/utils.js"></script>
+  <script type="module" src="/js/navbar.js"></script>
+  <script type="module" src="/js/footer.js"></script>
+
+  <script type="module">
+    import { CheckoutManager } from "/js/checkout.js";
+    const checkoutManager = new CheckoutManager();
+    checkoutManager.init();
+  </script>
+</body>
+</html>

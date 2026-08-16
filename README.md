@@ -1,156 +1,169 @@
-# BookMart - Production-Ready Full-Stack Online Bookstore
+# BookMart - Modern E-Commerce Bookstore
 
-**BookMart** is a modern, high-performance, full-stack e-commerce bookstore where customers can discover, search, filter, purchase, track, and review books. It features a complete customer storefront and a separate, role-protected administrative dashboard for inventory, orders, analytics, authors, publishers, categories, and promo coupons.
-
----
-
-## 🚀 Technology Stack
-
-### Frontend
-- **Framework**: React 18 with Vite
-- **Styling**: Tailwind CSS & Modern Typography (Inter & Merriweather Google Fonts)
-- **State Management**: Redux Toolkit & React Redux
-- **Routing**: React Router DOM v6 (Nested routes & Role-based Protection)
-- **HTTP Client**: Axios with Bearer token interceptors
-- **Icons**: Lucide React
-- **Notifications**: Custom Glassmorphism Toast Context Portal
-
-### Backend
-- **Runtime**: Node.js & Express.js
-- **Database**: MongoDB & Mongoose ORM
-- **Authentication**: JSON Web Token (JWT) & bcryptjs password hashing
-- **File Storage**: Cloudinary SDK with Multer & disk fallback for offline dev
-- **Middleware**: Express Async Handler, CORS, Auth & Role Authorization
+BookMart is a fully functional, production-ready online bookstore built with HTML5, CSS3, Vanilla JavaScript (ES6 Modules), and Firebase Services (Firebase Auth, Firestore, Storage, and Hosting).
 
 ---
 
-## 🔥 Main Features
+## Features Overview
 
 ### Customer Storefront
-- 🔐 **Authentication & Profile**: User registration, login, JWT session persistence, password reset flow, and address book manager.
-- 📚 **Catalog Browsing**: Multi-criteria sidebar filters (Category, Author, Publisher, Price Range slider, Rating, In-Stock only), live multi-field search (title, author, ISBN), sorting (Newest, Oldest, Price Low/High, Popular, Highest Rated), and clean pagination.
-- 📖 **Book Details**: Cover image gallery, stock availability badges, discount percentage tags, spec table, verified purchase customer reviews & rating submission form, and related book recommendations.
-- 🛒 **Cart & Wishlist**: Real-time stock limit checks, quantity controls, wishlist database persistence, and promo coupon discount engine.
-- 💳 **Cash on Delivery Checkout**: Multi-step checkout with address selection/creation, order summary calculation, free shipping threshold (RS 2000+), and COD confirmation.
-- 📦 **Order History & Tracking**: Order status progress timeline (Placed → Confirmed → Processing → Shipped → Delivered), printable invoice generator, and pending order cancellation with automatic stock restoration.
+- **Responsive Navigation**: Full navbar on desktop, hamburger sidebar on mobile.
+- **Hero & Promotions**: Interactive bookstore banner, featured categories, best sellers, and new arrivals.
+- **Catalog & Advanced Filtering**: Search by Title, Author, ISBN, Publisher, Category, Price Range, and Rating.
+- **Book Details Page**: Image gallery, stock status, verified customer reviews, rating breakdown, and related books.
+- **Shopping Cart & Wishlist**: Realtime item management, guest local storage fallback + Firestore user synchronization.
+- **Checkout & Cash on Delivery**: Multi-step checkout with address selection, coupon code validation, and stock validation.
+- **Customer Account Dashboard**: Profile editing, saved addresses, order history, and step-by-step order tracking.
 
-### Admin Panel (`/admin`)
-- 📊 **Dashboard Analytics**: Revenue stats, total orders count, pending/delivered orders, customer volume, low stock warning alerts, and top bestseller lists.
-- 📖 **Book Management**: Full CRUD for books with cover image file upload support to Cloudinary or disk.
-- 📂 **Category, Author & Publisher Management**: Full CRUD with book counts per entity.
-- 🚚 **Order Workflow Manager**: Live status transition dropdowns (`Pending`, `Confirmed`, `Processing`, `Shipped`, `Delivered`, `Cancelled`).
-- 👤 **Customer Management**: User list with order counts, total spending metrics, and instant Block/Unblock toggle.
-- 🏷️ **Coupons Engine**: Create fixed or percentage promo codes with min spend and usage limits.
-- 📦 **Inventory & Stock Manager**: Real-time stock status monitoring with low-stock warnings and quick-save stock updating.
+### Admin Control Panel
+- **Admin Dashboard**: Live metrics (Total Books, Customers, Orders, Revenue, Low Stock Alerts).
+- **Book Management**: Full CRUD operations with image uploads to Firebase Cloud Storage.
+- **Category, Author & Publisher Management**: Full CRUD operations.
+- **Order Management**: Status workflow (Pending → Confirmed → Processing → Shipped → Delivered / Cancelled).
+- **Customer Moderation**: Customer search, total spending stats, block/unblock capabilities.
+- **Coupon System**: Discount creation (fixed / percentage), usage limits, expiration rules.
 
 ---
 
-## 📂 Project Directory Structure
+## Directory Structure
 
 ```
-E-Commerce-Bookmart/
-├── backend/
-│   ├── config/             # DB & Cloudinary configuration
-│   ├── controllers/        # Express REST API controllers
-│   ├── middleware/         # Auth JWT, Admin Role Check, Multer Upload, Error Handlers
-│   ├── models/             # 12 Mongoose Schemas (User, Book, Category, Author, Publisher, Order, Review, Cart, Wishlist, Address, Coupon, Newsletter)
-│   ├── routes/             # Express API routes
-│   ├── seeders/            # Database seeder (20+ books, categories, admin user)
-│   ├── uploads/            # Local temp fallback image directory
-│   ├── .env.example
-│   ├── package.json
-│   └── server.js
-├── frontend/
-│   ├── src/
-│   │   ├── api/            # Axios Client with token interceptor
-│   │   ├── components/     # Reusable components (Navbar, Footer, BookCard, RatingStars, OrderStatusTimeline, Modal, Toast)
-│   │   ├── context/        # Toast Context Provider
-│   │   ├── pages/          # Storefront & Admin Pages
-│   │   ├── redux/          # Redux Store & Slices
-│   │   ├── App.jsx         # App router configuration
-│   │   └── main.jsx
+BookMart/
+├── index.html
+├── books.html
+├── book-details.html
+├── categories.html
+├── category.html
+├── authors.html
+├── author-details.html
+├── publishers.html
+├── publisher-details.html
+├── deals.html
+├── cart.html
+├── wishlist.html
+├── checkout.html
+├── orders.html
+├── order-details.html
+├── account.html
+├── login.html
+├── register.html
+├── forgot-password.html
+├── reset-password.html
+│
+├── admin/
 │   ├── index.html
-│   ├── tailwind.config.js
-│   └── vite.config.js
-├── package.json            # Root script orchestrator
+│   ├── books.html
+│   ├── book-create.html
+│   ├── book-edit.html
+│   ├── categories.html
+│   ├── authors.html
+│   ├── publishers.html
+│   ├── orders.html
+│   ├── order-details.html
+│   ├── customers.html
+│   ├── reviews.html
+│   ├── coupons.html
+│   ├── inventory.html
+│   └── analytics.html
+│
+├── css/
+│   ├── style.css
+│   ├── responsive.css
+│   ├── auth.css
+│   ├── shop.css
+│   ├── cart.css
+│   ├── checkout.css
+│   ├── account.css
+│   └── admin.css
+│
+├── js/
+│   ├── firebase-config.js
+│   ├── auth.js
+│   ├── auth-guard.js
+│   ├── navbar.js
+│   ├── footer.js
+│   ├── books.js
+│   ├── book-details.js
+│   ├── categories.js
+│   ├── authors.js
+│   ├── publishers.js
+│   ├── cart.js
+│   ├── wishlist.js
+│   ├── checkout.js
+│   ├── orders.js
+│   ├── reviews.js
+│   ├── profile.js
+│   ├── addresses.js
+│   ├── search.js
+│   ├── coupons.js
+│   ├── notifications.js
+│   ├── utils.js
+│   └── seed-data.js
+│
+├── js/admin/
+│   ├── admin-auth.js
+│   ├── dashboard.js
+│   ├── books.js
+│   ├── categories.js
+│   ├── authors.js
+│   ├── publishers.js
+│   ├── orders.js
+│   ├── customers.js
+│   ├── reviews.js
+│   ├── coupons.js
+│   ├── inventory.js
+│   └── analytics.js
+│
+├── firebase.json
+├── firestore.rules
+├── storage.rules
+├── firestore.indexes.json
 └── README.md
 ```
 
 ---
 
-## 🛠️ Quick Start & Local Setup
+## Firebase Setup Instructions
 
-### 1. Prerequisites
-- Node.js (v18 or higher)
-- MongoDB installed locally OR a free MongoDB Atlas Cluster connection URI.
-
-### 2. Environment Setup
-
-Copy `.env.example` in `backend/` to `backend/.env`:
-```env
-PORT=5000
-NODE_ENV=development
-MONGO_URI=mongodb://127.0.0.1:27017/bookmart
-JWT_SECRET=bookmart_super_secret_jwt_key_2026_safe
-JWT_EXPIRE=30d
-
-CLOUDINARY_CLOUD_NAME=demo
-CLOUDINARY_API_KEY=123456789
-CLOUDINARY_API_SECRET=abcdef123456
-
-ADMIN_EMAIL=admin@bookmart.com
-ADMIN_PASSWORD=admin123456
-```
-
-Copy `.env.example` in `frontend/` to `frontend/.env`:
-```env
-VITE_API_URL=http://localhost:5000/api
-```
-
-### 3. Seed Database
-To populate MongoDB with 20+ realistic books, categories, authors, publishers, promo coupons, and default credentials:
-```bash
-cmd /c "npm --prefix backend run seed"
-```
-
-**Default Admin Credentials**:
-- **Email**: `admin@bookmart.com`
-- **Password**: `admin123456`
-
-**Default Customer Credentials**:
-- **Email**: `customer@gmail.com`
-- **Password**: `customer123456`
-
-### 4. Run Application
-Run both backend REST server (Port 5000) and frontend Vite app (Port 3000) concurrently:
-```bash
-cmd /c "npm run dev"
-```
-
-Or run individually:
-```bash
-# Terminal 1: Backend
-cmd /c "npm --prefix backend run dev"
-
-# Terminal 2: Frontend
-cmd /c "npm --prefix frontend run dev"
-```
+1. **Create Firebase Project**: Go to [Firebase Console](https://console.firebase.google.com/) and create a new project named `bookmart-store`.
+2. **Enable Firebase Authentication**:
+   - Enable **Email/Password** sign-in provider under Authentication > Sign-in method.
+3. **Enable Firestore Database**:
+   - Create a Firestore Database in Production mode.
+   - Deploy `firestore.rules` and `firestore.indexes.json`.
+4. **Enable Cloud Storage**:
+   - Create a Storage bucket.
+   - Deploy `storage.rules`.
+5. **Configure `js/firebase-config.js`**:
+   - Replace the `firebaseConfig` object values in `js/firebase-config.js` with your project's Firebase client keys.
 
 ---
 
-## 🧪 Testing Checklist
+## Local Development
 
-1. **Auth & Roles**: Log in as `admin@bookmart.com` to access `/admin`. Log out and verify non-admin users are blocked from `/admin`.
-2. **Catalog Filters**: Search "Clean Code", filter by "Programming" category, price range, and sorting.
-3. **Cart & Wishlist**: Add items, test stock limit warning, apply promo coupon `WELCOME10` at cart/checkout.
-4. **Checkout**: Place Cash on Delivery order, verify stock deduction, check order history timeline (`/orders`).
-5. **Verified Review**: Attempt to review a book before delivery vs after delivered status.
-6. **Admin Panel**: Add a new book with image upload, change an order status to `Delivered`, block/unblock a customer.
+Start a local static server using Node.js / `serve`:
+
+```bash
+npm start
+```
+
+Navigate to `http://localhost:3000` in your web browser.
 
 ---
 
-## ⚡ Deployment Guidance
+## Admin Account Setup
 
-- **Frontend**: Deploy `frontend/` to **Vercel** or **Netlify** (`npm run build`). Set `VITE_API_URL` environment variable.
-- **Backend**: Deploy `backend/` to **Render** or **Railway**. Set `MONGO_URI`, `JWT_SECRET`, and `CLOUDINARY_*` environment variables.
-- **Database**: Host on **MongoDB Atlas**.
+1. Register a user via `register.html` (e.g. `admin@bookmart.com`).
+2. In the Firestore console, open the `users` collection, locate your user document (`users/{uid}`), and edit the `role` field from `"CUSTOMER"` to `"ADMIN"`.
+3. You can now access the Admin Dashboard at `/admin/index.html`.
+
+---
+
+## Firebase Deployment
+
+```bash
+npm install -g firebase-tools
+firebase login
+firebase init hosting
+firebase deploy
+```
