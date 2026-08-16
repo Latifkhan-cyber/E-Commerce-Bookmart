@@ -39,13 +39,12 @@ export function renderNavbar() {
             <button class="mobile-drawer-close" id="mobile-drawer-close-btn" aria-label="Close Menu">✕</button>
           </div>
 
-          <li><a href="/index.html" class="nav-link ${currentPath === '/' || currentPath.endsWith('index.html') ? 'active' : ''}">🏠 Home</a></li>
-          <li><a href="/books.html" class="nav-link ${currentPath.includes('books.html') ? 'active' : ''}">📖 Books Catalog</a></li>
-          <li><a href="/categories.html" class="nav-link ${currentPath.includes('categories.html') ? 'active' : ''}">📂 Categories</a></li>
-          <li><a href="/authors.html" class="nav-link ${currentPath.includes('authors.html') ? 'active' : ''}">✍️ Authors</a></li>
-          <li><a href="/publishers.html" class="nav-link ${currentPath.includes('publishers.html') ? 'active' : ''}">🏢 Publishers</a></li>
-          <li><a href="/deals.html" class="nav-link ${currentPath.includes('deals.html') ? 'active' : ''}">⚡ Special Deals</a></li>
-          <li><a href="/wishlist.html" class="nav-link ${currentPath.includes('wishlist.html') ? 'active' : ''}">❤️ My Wishlist</a></li>
+          <li><a href="/index.html" class="nav-link ${currentPath === '/' || currentPath.endsWith('index.html') ? 'active' : ''}">Home</a></li>
+          <li><a href="/books.html" class="nav-link ${currentPath.includes('books.html') ? 'active' : ''}">Books</a></li>
+          <li><a href="/categories.html" class="nav-link ${currentPath.includes('categories.html') ? 'active' : ''}">Categories</a></li>
+          <li><a href="/authors.html" class="nav-link ${currentPath.includes('authors.html') ? 'active' : ''}">Authors</a></li>
+          <li><a href="/publishers.html" class="nav-link ${currentPath.includes('publishers.html') ? 'active' : ''}">Publishers</a></li>
+          <li><a href="/deals.html" class="nav-link ${currentPath.includes('deals.html') ? 'active' : ''}">Deals</a></li>
 
           <!-- Mobile Auth Actions inside Drawer -->
           <div class="mobile-drawer-auth" id="mobile-drawer-auth">
@@ -60,7 +59,7 @@ export function renderNavbar() {
             🔍
           </a>
 
-          <a href="/wishlist.html" class="nav-icon-btn desktop-only-icon" title="Wishlist">
+          <a href="/wishlist.html" class="nav-icon-btn" title="Wishlist">
             ❤️
             <span class="nav-badge" id="wishlist-badge">0</span>
           </a>
@@ -128,9 +127,9 @@ export function renderNavbar() {
       const isAdmin = profile.role === "ADMIN";
       const userHtml = `
         <div class="user-dropdown">
-          <button class="nav-icon-btn" style="width:auto;gap:0.5rem;padding:0 0.5rem;" id="user-dropdown-btn">
-            <img src="${profile.profileImage || 'https://ui-avatars.com/api/?name=User'}" alt="${profile.name}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">
-            <span style="font-size:0.9rem;font-weight:600;display:none;@media(min-width:768px){display:inline;}">${profile.name.split(' ')[0]}</span>
+          <button class="nav-icon-btn" style="width:auto;gap:0.5rem;padding:0 0.65rem;" id="user-dropdown-btn">
+            <img src="${profile.profileImage || 'https://ui-avatars.com/api/?name=User'}" alt="${profile.name}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;">
+            <span style="font-size:0.85rem;font-weight:600;display:none;@media(min-width:768px){display:inline;}">${profile.name.split(' ')[0]}</span>
           </button>
           <div class="dropdown-menu">
             <div style="padding:0.75rem 1.25rem;border-bottom:1px solid var(--card-border);">
@@ -142,7 +141,7 @@ export function renderNavbar() {
             <a href="/wishlist.html" class="dropdown-item">❤️ My Wishlist</a>
             ${isAdmin ? `<a href="/admin/index.html" class="dropdown-item" style="color:var(--secondary-color);font-weight:700;">⚙️ Admin Dashboard</a>` : ''}
             <div class="dropdown-divider"></div>
-            <button id="nav-logout-btn" class="dropdown-item nav-logout-trigger" style="width:100%;border:none;background:none;cursor:pointer;color:var(--danger-color);">🚪 Logout</button>
+            <button class="dropdown-item nav-logout-trigger" style="width:100%;border:none;background:none;cursor:pointer;color:var(--danger-color);">🚪 Logout</button>
           </div>
         </div>
       `;

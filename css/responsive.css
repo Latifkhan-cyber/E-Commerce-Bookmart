@@ -2,39 +2,132 @@
    BookMart - Responsive Master Stylesheet (css/responsive.css)
    ========================================================================== */
 
-/* Mobile Drawer Header Elements */
-.mobile-drawer-header {
-  display: none;
+/* --------------------------------------------------------------------------
+   DESKTOP & LAPTOP DEFAULT NAVBAR (Applies to all laptops, PCs & tablets >= 481px)
+   -------------------------------------------------------------------------- */
+.desktop-user-section {
+  display: flex !important;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-.mobile-drawer-auth {
-  display: none;
+.mobile-drawer-header,
+.mobile-drawer-auth,
+.hamburger {
+  display: none !important;
 }
 
 .style-full {
   width: 100%;
 }
 
-/* Large Laptops & Desktops (Under 1200px) */
+/* Laptop Layout Adjustments (1200px and under) */
 @media (max-width: 1200px) {
+  .nav-menu {
+    gap: 1.1rem;
+  }
+
   .footer-grid {
     grid-template-columns: 1.5fr repeat(3, 1fr);
     gap: 2rem;
   }
+}
+
+/* Tablet Layout Adjustments (768px and under) */
+@media (max-width: 768px) {
+  h1 { font-size: 1.75rem !important; }
+  h2 { font-size: 1.4rem !important; }
+  h3 { font-size: 1.15rem !important; }
+
+  .hero-section {
+    grid-template-columns: 1fr !important;
+    text-align: center;
+    padding: 2.5rem 1.25rem !important;
+  }
+
+  .hero-content p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-content div {
+    justify-content: center;
+  }
+
+  .hero-image {
+    margin-top: 1.5rem;
+    justify-content: center !important;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .shop-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .filter-sidebar {
+    position: static;
+    margin-bottom: 2rem;
+  }
+
+  .book-details-layout {
+    grid-template-columns: 1fr !important;
+    gap: 2rem;
+  }
+
+  .checkout-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .cart-table-wrap, .data-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    display: block;
+    margin-bottom: 1.5rem;
+  }
 
   .admin-layout {
-    grid-template-columns: 220px 1fr;
+    grid-template-columns: 1fr;
+  }
+
+  .admin-sidebar {
+    position: relative;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--card-border);
+    padding: 1rem 1.5rem;
+  }
+
+  .admin-menu-list {
+    display: flex;
+    overflow-x: auto;
+    gap: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .admin-menu-item {
+    white-space: nowrap;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr !important;
   }
 }
 
-/* Tablets & Mobile Navigation Trigger (Under 1024px) */
-@media (max-width: 1024px) {
+/* --------------------------------------------------------------------------
+   MOBILE PHONE ONLY NAVBAR (ONLY applies on smartphones <= 480px width)
+   -------------------------------------------------------------------------- */
+@media (max-width: 480px) {
   .desktop-user-section {
     display: none !important;
   }
 
   .mobile-drawer-header {
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: space-between;
     width: 100%;
@@ -53,9 +146,28 @@
   }
 
   .mobile-drawer-auth {
-    display: block;
+    display: block !important;
     width: 100%;
     margin-top: 1.5rem;
+  }
+
+  .hamburger {
+    display: flex !important;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 5px;
+    margin-left: 0.5rem;
+  }
+
+  .hamburger span {
+    width: 24px;
+    height: 2.5px;
+    background-color: var(--text-main);
+    border-radius: 2px;
+    transition: var(--transition);
   }
 
   .nav-menu {
@@ -92,122 +204,6 @@
     width: 100%;
   }
 
-  .hamburger {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    cursor: pointer;
-    background: none;
-    border: none;
-    padding: 5px;
-    margin-left: 0.5rem;
-  }
-
-  .hamburger span {
-    width: 24px;
-    height: 2.5px;
-    background-color: var(--text-main);
-    border-radius: 2px;
-    transition: var(--transition);
-  }
-
-  /* Admin Layout Collapsed Sidebar */
-  .admin-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .admin-sidebar {
-    position: relative;
-    height: auto;
-    border-right: none;
-    border-bottom: 1px solid var(--card-border);
-    padding: 1rem 1.5rem;
-  }
-
-  .admin-menu-list {
-    display: flex;
-    overflow-x: auto;
-    gap: 0.5rem;
-    padding-bottom: 0.5rem;
-  }
-
-  .admin-menu-item {
-    white-space: nowrap;
-  }
-}
-
-/* Tablet Screens (Under 768px) */
-@media (max-width: 768px) {
-  h1 { font-size: 1.75rem !important; }
-  h2 { font-size: 1.4rem !important; }
-  h3 { font-size: 1.15rem !important; }
-
-  .hero-section {
-    grid-template-columns: 1fr !important;
-    text-align: center;
-    padding: 2.5rem 1.25rem !important;
-  }
-
-  .hero-content p {
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .hero-content div {
-    justify-content: center;
-  }
-
-  .hero-image {
-    margin-top: 1.5rem;
-    justify-content: center !important;
-  }
-
-  /* Footer Layout for Tablets */
-  .footer-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-  }
-
-  /* Shop Filters Sidebar & Catalog Layout */
-  .shop-layout {
-    grid-template-columns: 1fr !important;
-  }
-
-  .filter-sidebar {
-    position: static;
-    margin-bottom: 2rem;
-  }
-
-  /* Book Details Page */
-  .book-details-layout {
-    grid-template-columns: 1fr !important;
-    gap: 2rem;
-  }
-
-  .book-gallery .main-image {
-    height: 320px;
-  }
-
-  /* Cart & Checkout Layout */
-  .checkout-layout {
-    grid-template-columns: 1fr !important;
-  }
-
-  .cart-table-wrap, .data-table-wrap {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    width: 100%;
-    display: block;
-    margin-bottom: 1.5rem;
-  }
-
-  .stats-grid {
-    grid-template-columns: 1fr 1fr !important;
-  }
-}
-
-/* Mobile Screens (320px - 576px) */
-@media (max-width: 576px) {
   .container {
     padding: 0 0.85rem;
   }
@@ -216,7 +212,6 @@
     display: none !important;
   }
 
-  /* Brand Header Logo */
   .nav-brand {
     font-size: 1.3rem;
   }
@@ -225,7 +220,6 @@
     gap: 0.4rem;
   }
 
-  /* Footer Mobile Stacking */
   .footer {
     padding: 3rem 0 2rem;
   }
@@ -252,7 +246,6 @@
     width: 100%;
   }
 
-  /* Developer Attribution */
   .footer div[style*="border-top"] {
     font-size: 0.85rem !important;
     line-height: 1.6;
@@ -260,7 +253,6 @@
     margin-top: 2rem !important;
   }
 
-  /* Book Grid 2 Columns on Mobile */
   .books-grid {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 0.85rem !important;
@@ -302,13 +294,11 @@
     padding: 0.75rem 1rem;
   }
 
-  /* Categories & Authors Mobile Grids */
   .categories-grid, .authors-grid {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 0.85rem !important;
   }
 
-  /* Account Dashboard & Tracking Timeline */
   .tracking-timeline {
     flex-direction: column;
     align-items: flex-start;
@@ -324,7 +314,6 @@
     display: none;
   }
 
-  /* Admin Top Bar */
   .admin-top-bar {
     flex-direction: column;
     align-items: flex-start;
@@ -335,7 +324,6 @@
     grid-template-columns: 1fr !important;
   }
 
-  /* Toast Notification Mobile Positioning */
   #toast-container {
     left: 0.85rem;
     right: 0.85rem;
