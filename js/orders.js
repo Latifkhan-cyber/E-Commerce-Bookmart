@@ -2,18 +2,20 @@
 // BookMart - Customer Order History & Tracking Handler (js/orders.js)
 // ==========================================================================
 
-import { collection, query, where, getDocs, doc, getDoc, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { auth, db } from "./firebase-config.js";
-import { formatCurrency, formatDate, renderStarRating, showToast } from "./utils.js";
-import { requireCustomerAuth } from "./auth-guard.js";
+import { formatCurrency, formatDate, showToast } from "./utils.js";
 
 /**
- * Fetch customer orders from Firestore
+ * Fetch customer orders from Firestore and local cache
  * @param {string} customerId 
  * @returns {Promise<Array>}
  */
 export async function fetchCustomerOrders(customerId) {
-  if (!customerId) return [];
+  const localOrders = JSON.parse(localStorage.getItem("bookmart_recent_orders") || "[]");
+
+  if (!customerId) return localOrders;
 
   try {
     const q = query(
@@ -21,35 +23,57 @@ export async function fetchCustomerOrders(customerId) {
       where("customerId", "==", customerId)
     );
     const qSnap = await getDocs(q);
-    const orders = [];
+    const firestoreOrders = [];
     qSnap.forEach(docSnap => {
-      orders.push({ id: docSnap.id, ...docSnap.data() });
+      firestoreOrders.push({ id: docSnap.id, ...docSnap.data() });
     });
-    // Sort newest first
-    return orders.sort((a, b) => {
+
+    // Merge Firestore orders & local orders (deduplicating by orderId)
+    const orderMap = new Map();
+    [...localOrders, ...firestoreOrders].forEach(ord => {
+      const key = ord.orderId || ord.id;
+      if (key) orderMap.set(key, ord);
+    });
+
+    const merged = Array.from(orderMap.values());
+    return merged.sort((a, b) => {
       const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt || 0);
       const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt || 0);
       return dateB - dateA;
     });
   } catch (err) {
-    console.warn("Orders fetch error:", err);
-    return [];
+    console.warn("Orders fetch error, returning local cache:", err);
+    return localOrders;
   }
 }
 
 /**
- * Fetch single order by Order ID
+ * Fetch single order by Order ID (Local cache -> Firestore doc -> Firestore query)
  * @param {string} orderId 
  * @returns {Promise<Object|null>}
  */
 export async function fetchOrderById(orderId) {
   if (!orderId) return null;
 
+  // 1. Check Local Cache (Instant!)
+  const localOrders = JSON.parse(localStorage.getItem("bookmart_recent_orders") || "[]");
+  const localMatch = localOrders.find(o => o.orderId === orderId || o.id === orderId);
+  if (localMatch) return localMatch;
+
+  // 2. Try Firestore Doc ID
   try {
     const docRef = doc(db, "orders", orderId);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       return { id: docSnap.id, ...docSnap.data() };
+    }
+
+    // 3. Try Firestore Field Query
+    const q = query(collection(db, "orders"), where("orderId", "==", orderId));
+    const qSnap = await getDocs(q);
+    if (!qSnap.empty) {
+      const docData = qSnap.docs[0];
+      return { id: docData.id, ...docData.data() };
     }
   } catch (err) {
     console.warn("Order fetch error:", err);
@@ -61,13 +85,8 @@ export async function fetchOrderById(orderId) {
  * Render Customer Order History List Page
  */
 export async function renderOrdersHistoryPage() {
-  requireCustomerAuth();
-
   const container = document.getElementById("orders-history-container");
   if (!container) return;
-
-  const user = auth.currentUser;
-  if (!user) return;
 
   container.innerHTML = `
     <div style="padding: 2rem; text-align: center;">
@@ -75,61 +94,64 @@ export async function renderOrdersHistoryPage() {
     </div>
   `;
 
-  const orders = await fetchCustomerOrders(user.uid);
+  onAuthStateChanged(auth, async (user) => {
+    const userId = user ? user.uid : null;
+    const orders = await fetchCustomerOrders(userId);
 
-  if (orders.length === 0) {
+    if (orders.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">📦</div>
+          <h3>No Orders Placed Yet</h3>
+          <p>You haven't placed any book orders with BookMart yet.</p>
+          <a href="/books.html" class="btn btn-primary">Start Shopping</a>
+        </div>
+      `;
+      return;
+    }
+
+    const statusBadgeMap = {
+      Pending: 'badge-warning',
+      Confirmed: 'badge-info',
+      Processing: 'badge-info',
+      Shipped: 'badge-secondary',
+      Delivered: 'badge-success',
+      Cancelled: 'badge-discount'
+    };
+
     container.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-state-icon">📦</div>
-        <h3>No Orders Placed Yet</h3>
-        <p>You haven't placed any book orders with BookMart yet.</p>
-        <a href="/books.html" class="btn btn-primary">Start Shopping</a>
+      <div class="cart-table-wrap">
+        <table class="cart-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Date</th>
+              <th>Items</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${orders.map(ord => `
+              <tr>
+                <td style="font-weight:700;color:var(--primary-color);">${ord.orderId || ord.id}</td>
+                <td style="font-size:0.85rem;color:var(--text-muted);">${formatDate(ord.createdAt)}</td>
+                <td>${(ord.items || []).length} Book(s)</td>
+                <td style="font-weight:700;">${formatCurrency(ord.total)}</td>
+                <td>
+                  <span class="badge ${statusBadgeMap[ord.orderStatus] || 'badge-secondary'}">${ord.orderStatus || 'Pending'}</span>
+                </td>
+                <td>
+                  <a href="/order-details.html?id=${ord.orderId || ord.id}" class="btn btn-sm btn-outline">Track Order</a>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
       </div>
     `;
-    return;
-  }
-
-  const statusBadgeMap = {
-    Pending: 'badge-warning',
-    Confirmed: 'badge-info',
-    Processing: 'badge-info',
-    Shipped: 'badge-secondary',
-    Delivered: 'badge-success',
-    Cancelled: 'badge-discount'
-  };
-
-  container.innerHTML = `
-    <div class="cart-table-wrap">
-      <table class="cart-table">
-        <thead>
-          <tr>
-            <th>Order ID</th>
-            <th>Date</th>
-            <th>Items</th>
-            <th>Total</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${orders.map(ord => `
-            <tr>
-              <td style="font-weight:700;color:var(--primary-color);">${ord.orderId || ord.id}</td>
-              <td style="font-size:0.85rem;color:var(--text-muted);">${formatDate(ord.createdAt)}</td>
-              <td>${(ord.items || []).length} Book(s)</td>
-              <td style="font-weight:700;">${formatCurrency(ord.total)}</td>
-              <td>
-                <span class="badge ${statusBadgeMap[ord.orderStatus] || 'badge-secondary'}">${ord.orderStatus}</span>
-              </td>
-              <td>
-                <a href="/order-details.html?id=${ord.orderId || ord.id}" class="btn btn-sm btn-outline">Track Order</a>
-              </td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    </div>
-  `;
+  });
 }
 
 /**
@@ -137,10 +159,14 @@ export async function renderOrdersHistoryPage() {
  * @param {string} orderId 
  */
 export async function renderOrderTrackingPage(orderId) {
-  requireCustomerAuth();
-
   const container = document.getElementById("order-tracking-content");
   if (!container) return;
+
+  container.innerHTML = `
+    <div style="padding: 2rem; text-align: center;">
+      <div class="skeleton" style="width: 100%; height: 300px; border-radius: var(--radius-lg);"></div>
+    </div>
+  `;
 
   const order = await fetchOrderById(orderId);
 
@@ -159,7 +185,8 @@ export async function renderOrderTrackingPage(orderId) {
   document.title = `Order #${order.orderId || order.id} - BookMart Tracking`;
 
   const steps = ["Pending", "Confirmed", "Processing", "Shipped", "Delivered"];
-  const currentStepIdx = steps.indexOf(order.orderStatus);
+  const currentStatus = order.orderStatus || "Pending";
+  const currentStepIdx = steps.indexOf(currentStatus) > -1 ? steps.indexOf(currentStatus) : 0;
 
   container.innerHTML = `
     <div style="background-color: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-lg); padding: 2.5rem; margin-bottom: 2rem;">
@@ -172,14 +199,14 @@ export async function renderOrderTrackingPage(orderId) {
         </div>
         <div style="text-align:right;">
           <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.25rem;">Current Status</div>
-          <span class="badge ${order.orderStatus === 'Delivered' ? 'badge-success' : order.orderStatus === 'Cancelled' ? 'badge-discount' : 'badge-warning'}" style="font-size:1rem;padding:0.4rem 1rem;">
-            ${order.orderStatus}
+          <span class="badge ${currentStatus === 'Delivered' ? 'badge-success' : currentStatus === 'Cancelled' ? 'badge-discount' : 'badge-warning'}" style="font-size:1rem;padding:0.4rem 1rem;">
+            ${currentStatus}
           </span>
         </div>
       </div>
 
       <!-- Stepper Timeline -->
-      ${order.orderStatus === 'Cancelled' ? `
+      ${currentStatus === 'Cancelled' ? `
         <div class="empty-state" style="padding:2rem;background:rgba(239, 68, 68, 0.05);border-color:var(--danger-color);margin-bottom:2.5rem;">
           <h3 style="color:var(--danger-color);">Order Cancelled</h3>
           <p>This order was cancelled and will not be processed further.</p>
@@ -230,10 +257,10 @@ export async function renderOrderTrackingPage(orderId) {
             <div style="margin-bottom:1.25rem;">
               <div style="font-weight:700;font-size:0.9rem;margin-bottom:0.25rem;">Shipping Address</div>
               <div style="font-size:0.85rem;color:var(--text-muted);line-height:1.5;">
-                ${order.shippingAddress?.fullName}<br>
-                ${order.shippingAddress?.address}<br>
-                ${order.shippingAddress?.city}, ${order.shippingAddress?.province} ${order.shippingAddress?.postalCode}<br>
-                📞 ${order.shippingAddress?.phone}
+                ${order.shippingAddress?.fullName || 'N/A'}<br>
+                ${order.shippingAddress?.address || ''}<br>
+                ${order.shippingAddress?.city || ''}, ${order.shippingAddress?.province || ''} ${order.shippingAddress?.postalCode || ''}<br>
+                📞 ${order.shippingAddress?.phone || ''}
               </div>
             </div>
 

@@ -309,6 +309,11 @@ export class CheckoutManager {
       // 1. Create Order document in Firestore
       await setDoc(doc(db, "orders", orderId), orderData);
 
+      // Save to local storage cache for instant local tracking access
+      const recentOrders = JSON.parse(localStorage.getItem("bookmart_recent_orders") || "[]");
+      recentOrders.unshift({ ...orderData, createdAt: new Date().toISOString() });
+      localStorage.setItem("bookmart_recent_orders", JSON.stringify(recentOrders));
+
       // 2. Update stock & soldCount for each purchased book in Firestore
       for (const item of this.populatedItems) {
         try {

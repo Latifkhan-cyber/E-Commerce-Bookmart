@@ -2,29 +2,31 @@
 // BookMart - Author Service & UI Handler (js/authors.js)
 // ==========================================================================
 
-import { collection, getDocs, doc, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { db } from "./firebase-config.js";
 import { sampleAuthors, sampleBooks } from "./seed-data.js";
 import { renderStarRating, formatCurrency } from "./utils.js";
 
+let authorsCache = sampleAuthors;
+let isAuthorsFetched = false;
+
 /**
- * Fetch all authors from Firestore (with fallback dataset)
+ * Fetch all authors instantly (0ms delay) with background Firestore sync
  * @returns {Promise<Array>}
  */
 export async function fetchAuthors() {
-  try {
-    const querySnapshot = await getDocs(collection(db, "authors"));
-    if (!querySnapshot.empty) {
-      const authors = [];
-      querySnapshot.forEach(docSnap => {
-        authors.push({ id: docSnap.id, ...docSnap.data() });
-      });
-      return authors;
-    }
-  } catch (error) {
-    console.warn("Firestore authors fetch failed, using fallback:", error);
+  if (!isAuthorsFetched) {
+    getDocs(collection(db, "authors")).then(qSnap => {
+      if (!qSnap.empty) {
+        const authors = [];
+        qSnap.forEach(d => authors.push({ id: d.id, ...d.data() }));
+        authorsCache = authors;
+        isAuthorsFetched = true;
+      }
+    }).catch(() => {});
   }
-  return sampleAuthors;
+
+  return authorsCache;
 }
 
 /**
@@ -35,22 +37,15 @@ export async function fetchAuthors() {
 export async function fetchAuthorById(authorId) {
   if (!authorId) return null;
 
-  try {
-    const docRef = doc(db, "authors", authorId);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      return { id: docSnap.id, ...docSnap.data() };
-    }
-  } catch (err) {
-    console.warn("Author fetch error:", err);
-  }
+  const authors = await fetchAuthors();
+  const match = authors.find(a => a.id === authorId);
+  if (match) return match;
 
-  const match = sampleAuthors.find(a => a.id === authorId);
-  return match || null;
+  return sampleAuthors.find(a => a.id === authorId) || null;
 }
 
 /**
- * Render Authors Grid
+ * Render Authors Grid instantly
  * @param {string} containerId 
  */
 export async function renderAuthorGrid(containerId = "authors-grid-container") {
@@ -125,21 +120,7 @@ export async function renderAuthorDetailPage(authorId) {
     </div>
   `;
 
-  // Fetch author books
-  let authorBooks = [];
-  try {
-    const q = query(collection(db, "books"), where("authorId", "==", author.id));
-    const qSnap = await getDocs(q);
-    if (!qSnap.empty) {
-      qSnap.forEach(docSnap => authorBooks.push({ id: docSnap.id, ...docSnap.data() }));
-    }
-  } catch (err) {
-    console.warn("Firestore author books fetch error:", err);
-  }
-
-  if (authorBooks.length === 0) {
-    authorBooks = sampleBooks.filter(b => b.authorId === author.id || b.authorName.toLowerCase() === author.name.toLowerCase());
-  }
+  const authorBooks = sampleBooks.filter(b => b.authorId === author.id || b.authorName.toLowerCase() === author.name.toLowerCase());
 
   if (authorBooks.length === 0) {
     booksContainer.innerHTML = `
@@ -173,7 +154,9 @@ export async function renderAuthorDetailPage(authorId) {
             <span class="current-price">${formatCurrency(book.discountPrice || book.price)}</span>
             ${book.discountPrice ? `<span class="original-price">${formatCurrency(book.price)}</span>` : ''}
           </div>
-          <a href="/book-details.html?id=${book.id}" class="btn btn-sm btn-primary" style="z-index:2;">View</a>
+          <button class="btn btn-sm btn-primary add-to-cart-btn" data-book-id="${book.id}" style="z-index:5;">
+            🛒 Add
+          </button>
         </div>
       </div>
     </div>

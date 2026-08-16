@@ -2,39 +2,33 @@
 // BookMart - Books Catalog Service & Filter Controller (js/books.js)
 // ==========================================================================
 
-import { collection, getDocs, doc, getDoc, query, where, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { db } from "./firebase-config.js";
 import { sampleBooks } from "./seed-data.js";
-import { renderStarRating, formatCurrency, showToast } from "./utils.js";
+import { renderStarRating, formatCurrency } from "./utils.js";
 
-let booksCache = null;
+// Instant 0ms cache defaulting to sampleBooks
+let booksCache = sampleBooks;
+let isFirestoreFetched = false;
 
 /**
- * Fetch all books with fast in-memory caching & network timeout race
+ * Fetch all books instantly (0ms delay) with background Firestore sync
  * @returns {Promise<Array>}
  */
 export async function fetchAllBooks() {
-  if (booksCache && booksCache.length > 0) {
-    return booksCache;
+  if (!isFirestoreFetched) {
+    // Non-blocking background sync from Firestore
+    getDocs(collection(db, "books")).then(qSnap => {
+      if (!qSnap.empty) {
+        const books = [];
+        qSnap.forEach(docSnap => books.push({ id: docSnap.id, ...docSnap.data() }));
+        booksCache = books;
+        isFirestoreFetched = true;
+      }
+    }).catch(() => {});
   }
 
-  try {
-    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 1500));
-    const fetchPromise = getDocs(collection(db, "books"));
-    const qSnap = await Promise.race([fetchPromise, timeoutPromise]);
-
-    if (qSnap && !qSnap.empty) {
-      const books = [];
-      qSnap.forEach(docSnap => books.push({ id: docSnap.id, ...docSnap.data() }));
-      booksCache = books;
-      return books;
-    }
-  } catch (err) {
-    // Network delay or unseeded Firestore, fallback instantly to sample dataset
-  }
-
-  booksCache = sampleBooks;
-  return sampleBooks;
+  return booksCache;
 }
 
 /**
@@ -48,16 +42,6 @@ export async function fetchBookById(bookId) {
   const books = await fetchAllBooks();
   const match = books.find(b => b.id === bookId);
   if (match) return match;
-
-  try {
-    const docRef = doc(db, "books", bookId);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      return { id: docSnap.id, ...docSnap.data() };
-    }
-  } catch (err) {
-    console.warn("Book fetch error:", err);
-  }
 
   return sampleBooks.find(b => b.id === bookId) || null;
 }

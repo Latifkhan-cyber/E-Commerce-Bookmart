@@ -6,6 +6,8 @@ import { fetchBookById, fetchAllBooks, createBookCardHtml } from "./books.js";
 import { renderStarRating, formatCurrency, showToast } from "./utils.js";
 import { collection, query, where, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { db, auth } from "./firebase-config.js";
+import { addToCart } from "./cart.js";
+import { addToWishlist } from "./wishlist.js";
 
 /**
  * Render Book Details Page
@@ -169,7 +171,7 @@ export async function renderBookDetails(bookId) {
     const btn = document.getElementById("add-cart-detail-btn");
     btn.disabled = true;
     btn.textContent = "Adding...";
-    await window.addToCart(book.id, qty);
+    await addToCart(book.id, qty);
     btn.disabled = false;
     btn.textContent = "🛒 Add to Cart";
   });
@@ -180,15 +182,13 @@ export async function renderBookDetails(bookId) {
     const btn = document.getElementById("buy-now-btn");
     btn.disabled = true;
     btn.textContent = "Processing...";
-    await window.addToCart(book.id, qty);
+    await addToCart(book.id, qty);
     window.location.href = "/checkout.html";
   });
 
   // Wishlist Event
   document.getElementById("wishlist-detail-btn")?.addEventListener("click", async () => {
-    if (window.addToWishlist) {
-      await window.addToWishlist(book.id);
-    }
+    await addToWishlist(book.id);
   });
 
   // Render Related Books

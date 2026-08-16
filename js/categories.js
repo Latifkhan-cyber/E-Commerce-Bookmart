@@ -7,36 +7,26 @@ import { db } from "./firebase-config.js";
 import { sampleCategories, sampleBooks } from "./seed-data.js";
 import { renderStarRating, formatCurrency } from "./utils.js";
 
-let categoriesCache = null;
+let categoriesCache = sampleCategories;
+let isCategoriesFetched = false;
 
 /**
- * Fetch all categories from Firestore (with fast caching & fallback)
+ * Fetch all categories instantly (0ms delay) with background Firestore sync
  * @returns {Promise<Array>}
  */
 export async function fetchCategories() {
-  if (categoriesCache && categoriesCache.length > 0) {
-    return categoriesCache;
+  if (!isCategoriesFetched) {
+    getDocs(collection(db, "categories")).then(qSnap => {
+      if (!qSnap.empty) {
+        const cats = [];
+        qSnap.forEach(d => cats.push({ id: d.id, ...d.data() }));
+        categoriesCache = cats;
+        isCategoriesFetched = true;
+      }
+    }).catch(() => {});
   }
 
-  try {
-    const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 1500));
-    const fetchPromise = getDocs(collection(db, "categories"));
-    const querySnapshot = await Promise.race([fetchPromise, timeoutPromise]);
-
-    if (querySnapshot && !querySnapshot.empty) {
-      const categories = [];
-      querySnapshot.forEach(docSnap => {
-        categories.push({ id: docSnap.id, ...docSnap.data() });
-      });
-      categoriesCache = categories;
-      return categories;
-    }
-  } catch (error) {
-    // Network delay fallback
-  }
-
-  categoriesCache = sampleCategories;
-  return sampleCategories;
+  return categoriesCache;
 }
 
 /**
@@ -51,21 +41,11 @@ export async function fetchCategoryByIdOrSlug(identifier) {
   const match = categories.find(c => c.id === identifier || c.slug === identifier.toLowerCase());
   if (match) return match;
 
-  try {
-    const docRef = doc(db, "categories", identifier);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      return { id: docSnap.id, ...docSnap.data() };
-    }
-  } catch (err) {
-    console.warn("Category fetch error:", err);
-  }
-
   return sampleCategories.find(c => c.id === identifier || c.slug === identifier.toLowerCase()) || null;
 }
 
 /**
- * Render Category Grid Cards
+ * Render Category Grid Cards instantly
  * @param {string} containerId 
  */
 export async function renderCategoryGrid(containerId = "categories-grid-container") {
@@ -136,19 +116,7 @@ export async function renderCategoryDetailPage(categoryIdentifier) {
     </div>
   `;
 
-  let categoryBooks = sampleBooks.filter(b => b.categoryId === category.id || b.categoryName.toLowerCase() === category.name.toLowerCase());
-
-  try {
-    const q = query(collection(db, "books"), where("categoryId", "==", category.id));
-    const qSnap = await getDocs(q);
-    if (!qSnap.empty) {
-      const fetched = [];
-      qSnap.forEach(docSnap => fetched.push({ id: docSnap.id, ...docSnap.data() }));
-      if (fetched.length > 0) categoryBooks = fetched;
-    }
-  } catch (err) {
-    console.warn("Firestore category books fetch error:", err);
-  }
+  const categoryBooks = sampleBooks.filter(b => b.categoryId === category.id || b.categoryName.toLowerCase() === category.name.toLowerCase());
 
   if (categoryBooks.length === 0) {
     booksContainer.innerHTML = `

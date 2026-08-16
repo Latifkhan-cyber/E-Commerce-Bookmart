@@ -5,6 +5,8 @@
 import { onAuthChange, logoutUser } from "./auth.js";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { db } from "./firebase-config.js";
+import { getCartItems, addToCart } from "./cart.js";
+import { getWishlistBookIds, addToWishlist } from "./wishlist.js";
 
 /**
  * Render Navbar into target element or #navbar-container
@@ -79,6 +81,9 @@ export function renderNavbar() {
     });
   }
 
+  // Initial Badges Render
+  updateLocalBadges();
+
   // Update Auth User Section & Badge Counts
   onAuthChange(async (user, profile) => {
     const userSection = document.getElementById("nav-user-section");
@@ -111,7 +116,6 @@ export function renderNavbar() {
         logoutUser();
       });
 
-      // Fetch user cart count & wishlist count from Firestore
       updateNavBadges(user.uid);
     } else {
       userSection.innerHTML = `
@@ -129,22 +133,20 @@ export function renderNavbar() {
  */
 async function updateNavBadges(userId) {
   try {
-    const cartSnap = await getDoc(doc(db, "carts", userId));
+    const items = await getCartItems();
     const cartBadge = document.getElementById("cart-badge");
-    if (cartBadge && cartSnap.exists()) {
-      const items = cartSnap.data().items || [];
-      const totalQty = items.reduce((acc, item) => acc + (item.quantity || 1), 0);
+    if (cartBadge) {
+      const totalQty = (items || []).reduce((acc, item) => acc + (item.quantity || 1), 0);
       cartBadge.textContent = totalQty;
     }
 
-    const wishlistSnap = await getDoc(doc(db, "wishlists", userId));
+    const wishlistIds = await getWishlistBookIds();
     const wishlistBadge = document.getElementById("wishlist-badge");
-    if (wishlistBadge && wishlistSnap.exists()) {
-      const bookIds = wishlistSnap.data().bookIds || [];
-      wishlistBadge.textContent = bookIds.length;
+    if (wishlistBadge) {
+      wishlistBadge.textContent = wishlistIds.length;
     }
   } catch (err) {
-    console.error("Badge update error:", err);
+    console.warn("Badge update error:", err);
   }
 }
 
