@@ -1,63 +1,52 @@
 /* ==========================================================================
-   BookMart - Core Design System & Styling (css/style.css)
+   BookMart - Global Design System & Utility Stylesheet (css/style.css)
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap');
-
+/* Design Tokens & CSS Variables */
 :root {
-  /* Brand Color Palette */
-  --primary-color: #1E293B;       /* Deep Slate / Navy */
-  --primary-hover: #0F172A;
-  --secondary-color: #E67E22;     /* Warm Book Gold / Orange */
-  --secondary-hover: #D35400;
-  --accent-color: #10B981;        /* Fresh Emerald Success */
-  --danger-color: #EF4444;        /* Crimson Red */
-  --warning-color: #F59E0B;       /* Amber Warning */
-  --info-color: #3B82F6;          /* Royal Blue */
-
-  /* Neutral Tones */
-  --bg-color: #F8F9FA;            /* Warm Off-White */
+  --primary-color: #1E293B;
+  --secondary-color: #E67E22;
+  --accent-color: #10B981;
+  --bg-color: #F8FAFC;
   --card-bg: #FFFFFF;
   --card-border: #E2E8F0;
-  --text-main: #1E293B;
+  --text-main: #0F172A;
   --text-muted: #64748B;
   --text-light: #94A3B8;
   --border-light: #F1F5F9;
+  
+  --danger-color: #EF4444;
+  --warning-color: #F59E0B;
+  --info-color: #3B82F6;
 
-  /* Typography */
-  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-heading: 'Outfit', 'Inter', sans-serif;
+  --font-heading: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-
-  /* Spacing & Radii */
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;
   --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 10px 25px rgba(15, 23, 42, 0.12);
+
   --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   --navbar-height: 72px;
 }
 
-/* Dark Mode Overrides (Controlled via class 'dark-theme' on body) */
-body.dark-theme {
-  --bg-color: #0F172A;
+/* Dark Mode Tokens */
+[data-theme="dark"] {
+  --primary-color: #0F172A;
+  --bg-color: #0B0F19;
   --card-bg: #1E293B;
   --card-border: #334155;
   --text-main: #F8FAFC;
   --text-muted: #94A3B8;
-  --text-light: #64748B;
-  --border-light: #334155;
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+  --border-light: #1E293B;
 }
 
-/* CSS Reset & Global Layout */
+/* CSS Reset */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -65,29 +54,23 @@ body.dark-theme {
 }
 
 html {
+  font-family: var(--font-body);
   font-size: 16px;
   scroll-behavior: smooth;
+  color: var(--text-main);
+  background-color: var(--bg-color);
 }
 
 body {
-  font-family: var(--font-body);
-  background-color: var(--bg-color);
-  color: var(--text-main);
-  line-height: 1.6;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
 }
 
 a {
   color: inherit;
   text-decoration: none;
-  transition: var(--transition);
-}
-
-ul, ol {
-  list-style: none;
 }
 
 img {
@@ -96,37 +79,30 @@ img {
   display: block;
 }
 
-button, input, select, textarea {
-  font: inherit;
-  color: inherit;
+ul {
+  list-style: none;
 }
 
 /* Container */
 .container {
   width: 100%;
-  max-width: 1280px;
+  max-width: 1240px;
   margin: 0 auto;
-  padding: 0 1.25rem;
+  padding: 0 1.5rem;
 }
 
-.main-content {
-  flex: 1 0 auto;
-  padding-top: calc(var(--navbar-height) + 1.5rem);
-  padding-bottom: 3rem;
-}
-
-/* Headings */
+/* Typography */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
-  color: var(--text-main);
   font-weight: 700;
   line-height: 1.25;
+  color: var(--text-main);
 }
 
-h1 { font-size: 2.25rem; }
-h2 { font-size: 1.75rem; }
-h3 { font-size: 1.35rem; }
-h4 { font-size: 1.15rem; }
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.25rem; }
 
 /* Buttons */
 .btn {
@@ -135,13 +111,23 @@ h4 { font-size: 1.15rem; }
   justify-content: center;
   gap: 0.5rem;
   padding: 0.65rem 1.35rem;
+  font-family: var(--font-body);
   font-size: 0.95rem;
   font-weight: 600;
   border-radius: var(--radius-md);
   border: 1px solid transparent;
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+
+.btn:active {
+  transform: translateY(0);
 }
 
 .btn-primary {
@@ -150,20 +136,21 @@ h4 { font-size: 1.15rem; }
 }
 
 .btn-primary:hover {
-  background-color: var(--primary-hover);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+  background-color: #0F172A;
+}
+
+.btn-secondary {
+  background-color: var(--secondary-color);
+  color: #FFFFFF;
+}
+
+.btn-secondary:hover {
+  background-color: #D35400;
 }
 
 .btn-accent {
   background-color: var(--secondary-color);
   color: #FFFFFF;
-}
-
-.btn-accent:hover {
-  background-color: var(--secondary-hover);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
 }
 
 .btn-outline {
@@ -182,10 +169,6 @@ h4 { font-size: 1.15rem; }
   color: #FFFFFF;
 }
 
-.btn-danger:hover {
-  background-color: #DC2626;
-}
-
 .btn-sm {
   padding: 0.4rem 0.85rem;
   font-size: 0.85rem;
@@ -193,23 +176,15 @@ h4 { font-size: 1.15rem; }
 }
 
 .btn-lg {
-  padding: 0.85rem 1.85rem;
-  font-size: 1.1rem;
+  padding: 0.85rem 1.75rem;
+  font-size: 1.05rem;
   border-radius: var(--radius-md);
-}
-
-.btn-icon {
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  border-radius: var(--radius-full);
 }
 
 /* Badges */
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
   padding: 0.25rem 0.65rem;
   font-size: 0.75rem;
   font-weight: 700;
@@ -219,57 +194,65 @@ h4 { font-size: 1.15rem; }
 }
 
 .badge-discount {
-  background-color: rgba(239, 68, 68, 0.12);
+  background-color: #FEE2E2;
   color: var(--danger-color);
 }
 
 .badge-success {
-  background-color: rgba(16, 185, 129, 0.12);
-  color: var(--accent-color);
+  background-color: #D1FAE5;
+  color: #065F46;
 }
 
 .badge-warning {
-  background-color: rgba(245, 158, 11, 0.12);
-  color: var(--warning-color);
+  background-color: #FEF3C7;
+  color: #92400E;
 }
 
 .badge-info {
-  background-color: rgba(59, 130, 246, 0.12);
-  color: var(--info-color);
+  background-color: #DBEAFE;
+  color: #1E40AF;
 }
 
-.badge-secondary {
-  background-color: rgba(100, 116, 139, 0.12);
-  color: var(--text-muted);
-}
-
-/* Modern Navbar */
-.navbar {
+/* Mobile Backdrop Overlay */
+.nav-backdrop {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.nav-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Navbar */
+.navbar {
   height: var(--navbar-height);
   background-color: var(--card-bg);
   border-bottom: 1px solid var(--card-border);
+  position: sticky;
+  top: 0;
   z-index: 1000;
   display: flex;
   align-items: center;
   box-shadow: var(--shadow-sm);
-  transition: var(--transition);
 }
 
 .navbar .container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.5rem;
 }
 
 .nav-brand {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
   font-family: var(--font-heading);
   font-size: 1.5rem;
   font-weight: 800;
@@ -283,14 +266,15 @@ h4 { font-size: 1.15rem; }
 .nav-menu {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.75rem;
 }
 
 .nav-link {
-  font-weight: 500;
-  color: var(--text-main);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  transition: var(--transition);
   position: relative;
-  padding: 0.5rem 0;
 }
 
 .nav-link:hover, .nav-link.active {
@@ -351,6 +335,23 @@ h4 { font-size: 1.15rem; }
   justify-content: center;
 }
 
+/* Hamburger Icon Animation */
+.hamburger span {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: translateY(7.5px) rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: translateY(-7.5px) rotate(-45deg);
+}
+
 /* User Dropdown Menu */
 .user-dropdown {
   position: relative;
@@ -369,6 +370,7 @@ h4 { font-size: 1.15rem; }
   flex-direction: column;
   padding: 0.5rem 0;
   z-index: 1100;
+  animation: fadeInUp 0.25s ease;
 }
 
 .user-dropdown:hover .dropdown-menu,
@@ -430,15 +432,6 @@ h4 { font-size: 1.15rem; }
 .footer-links a:hover {
   color: var(--secondary-color);
   padding-left: 4px;
-}
-
-.footer-bottom {
-  border-top: 1px solid #1E293B;
-  padding-top: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 0.875rem;
 }
 
 /* Toast Notifications Container */
@@ -595,4 +588,53 @@ h4 { font-size: 1.15rem; }
   color: var(--text-muted);
   max-width: 420px;
   margin: 0 auto 1.5rem;
+}
+
+/* Global Keyframe Animations & Micro-Interactions */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes badgePulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+.badge-pulse {
+  animation: badgePulse 0.5s ease-in-out;
+}
+
+.book-card {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+  animation: fadeInUp 0.4s ease forwards;
+}
+
+.book-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+}
+
+.book-cover-wrap img {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.book-card:hover .book-cover-wrap img {
+  transform: scale(1.06);
+}
+
+.category-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--secondary-color);
+  box-shadow: 0 10px 25px rgba(230, 126, 34, 0.15);
 }
