@@ -47,34 +47,9 @@ BookMart is a modern, fully responsive online e-commerce bookstore built with HT
 3. **Open in browser**:
    Navigate to `http://localhost:3000`
 
----
-
-## 🔧 Firebase Configuration
-
-1. Copy `.env.example` to `.env` (or configure [`js/firebase-config.js`](file:///e:/My%20Projects/E-Commerce-Bookmart/js/firebase-config.js)):
-   ```javascript
-   const firebaseConfig = {
-     apiKey: "YOUR_API_KEY",
-     authDomain: "YOUR_PROJECT.firebaseapp.com",
-     projectId: "YOUR_PROJECT_ID",
-     storageBucket: "YOUR_PROJECT.appspot.com",
-     messagingSenderId: "YOUR_SENDER_ID",
-     appId: "YOUR_APP_ID"
-   };
-   ```
-2. Enable **Email/Password** in Firebase Authentication.
-3. Deploy Firestore rules ([`firestore.rules`](file:///e:/My%20Projects/E-Commerce-Bookmart/firestore.rules)) and Storage rules ([`storage.rules`](file:///e:/My%20Projects/E-Commerce-Bookmart/storage.rules)).
-
----
-
 ## 👤 Admin Access Setup
 
 1. Register an account via `/register.html`.
 2. In your Firebase Console > Firestore > `users` collection, locate your user UID and change `role` to `"ADMIN"`.
 3. Access the admin dashboard at `/admin/index.html`.
 
----
-
-## 📄 License
-
-This project is licensed under the MIT License.
